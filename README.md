@@ -10,3 +10,4 @@ For help getting started with Flutter, view our online
 ## 持续更新
 
 欢迎star
+ <img src="/gif/index.gif" width="240px" height="426px"/>
