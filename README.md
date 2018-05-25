@@ -6,3 +6,7 @@ A new Flutter about to douban.
 
 For help getting started with Flutter, view our online
 [documentation](https://flutter.io/).
+
+## 持续更新
+
+欢迎star
