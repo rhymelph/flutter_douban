@@ -16,19 +16,19 @@ class Movie{
   Movie(this.title, this.original_title, this.rating, this.collect_count, this.subtype, this.year, this.images, this.alt, this.id, this.genres, this.casts, this.directors);
 
   factory Movie.formJson(Map<String,dynamic> json){
-    List<String> genres=new List<String>.generate(json['genres'].length, (index){
+    List<String> genres=json['genres']!=null?new List<String>.generate(json['genres'].length, (index){
       return json['genres'][index];
-    });
+    }):null;
 
-    List<CastsBean> casts=new List<CastsBean>.generate(json['casts'].length, (index){
+    List<CastsBean> casts=json['casts']!=null?new List<CastsBean>.generate(json['casts'].length, (index){
       var obj=json['casts'][index];
       return new CastsBean(obj['alt'], obj['avatars']==null?null:new AvatarsBean(obj['avatars']['small'], obj['avatars']['large'], obj['avatars']['medium']), obj['name'], obj['id']);
-    });
+    }):null;
 
-    List<DirectorsBean> directors=new List<DirectorsBean>.generate(json['directors'].length, (index){
+    List<DirectorsBean> directors=json['directors']!=null?new List<DirectorsBean>.generate(json['directors'].length, (index){
       var obj=json['directors'][index];
       return new DirectorsBean(obj['alt'], obj['avatars']==null?null:new AvatarsBean(obj['avatars']['small'], obj['avatars']['large'], obj['avatars']['medium']), obj['name'], obj['id']);
-    });
+    }):null;
 
 
     return new Movie(json['title'], json['original_title']

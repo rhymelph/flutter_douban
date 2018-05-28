@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_douban/entity/movie.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -14,7 +15,7 @@ class MovieInfoPage extends StatefulWidget {
 }
 
 class _MovieInfoPageState extends State<MovieInfoPage> {
-  MovieInfo info = null;
+  MovieInfo info;
 
   @override
   void initState() {
@@ -30,10 +31,16 @@ class _MovieInfoPageState extends State<MovieInfoPage> {
   _initData() async {
     String infoUrl = '$movie_page${widget.movie.id}';
     print(infoUrl);
-    http.Response response = await http.get(infoUrl);
+    http.Response info_res = await http.get(infoUrl);
+
+    //权限问题,影评暂时不获取
+//    String commentUrl='$movie_page${widget.movie.id}/reviews';
+//
+//    http.Response comment_res=await http.get(commentUrl);
+//    print(comment_res.body);
 
     setState(() {
-      info = new MovieInfo.forJson(json.decode(response.body));
+      info = new MovieInfo.forJson(json.decode(info_res.body));
     });
   }
 
@@ -52,6 +59,7 @@ class _MovieInfoPageState extends State<MovieInfoPage> {
         children: <Widget>[
           new Image.network(
             castsBean.avatars==null?"":castsBean.avatars.medium,
+
             width: 100.0,
             height: 100.0,
           ),
@@ -60,6 +68,9 @@ class _MovieInfoPageState extends State<MovieInfoPage> {
       ));
     });
   }
+  _getComment() {
+
+  }
 
   _getDirectors(){
     return new  List<Widget>.generate(info.directors.length, (index){
@@ -67,7 +78,7 @@ class _MovieInfoPageState extends State<MovieInfoPage> {
       return new Expanded(child: new Column(
         children: <Widget>[
           new Image.network(
-            directorsBean.avatars.medium==null?directorsBean.avatars.large==null?directorsBean.avatars.small:directorsBean.avatars.large:directorsBean.avatars.medium,
+            directorsBean.avatars==null?"":directorsBean.avatars.medium,
             width: 100.0,
             height: 100.0,
           ),
@@ -133,13 +144,33 @@ class _MovieInfoPageState extends State<MovieInfoPage> {
         ),
         new Container(
             padding: const EdgeInsets.all(4.0),
-            child: new Text(info.summary))
+            child: new Text(info.summary)),
+        new Container(
+          child: new DecoratedBox(decoration: new BoxDecoration(
+              gradient: new RadialGradient(colors: <Color>[
+                Colors.lightBlue,
+                Colors.red,
+              ],radius: 0.15
+                  ,center: const Alignment(-0.5, -0.5)
+                  ,stops: <double>[0.9,1.0])
+          )),
+          height: 2.0,
+        ),
+        new Align(
+          alignment: Alignment.topLeft,
+          child: new Container(
+              padding: const EdgeInsets.all(4.0),
+              child: new Text('影评:(豆瓣api无权限,所以没有)',style: Theme.of(context).textTheme.title.copyWith(color: Colors.blue),)),
+        ),
       ],
     );
   }
 
-  _share(){
-    print('分享');
+  static const platform = const MethodChannel('samples.flutter.io/share');
+
+  _share() async{
+    final bool result=await platform.invokeMethod('ShareToThis',[info.title,info.mobile_url,info.summary]);
+    print(result?'分享成功':'分享失败');
   }
   @override
   Widget build(BuildContext context) {
@@ -153,5 +184,7 @@ class _MovieInfoPageState extends State<MovieInfoPage> {
       body: info == null ? _showProgress() : _getBody(),
     );
   }
+
 }
 const String movie_page = 'https://api.douban.com/v2/movie/subject/';
+

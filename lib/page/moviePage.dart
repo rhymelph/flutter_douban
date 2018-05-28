@@ -4,15 +4,18 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_douban/info/movie_info.dart';
 class MoviePage extends StatefulWidget {
+  MoviePage(this.dataPath);
+  final String dataPath;
   List<Movie> content;
   @override
   _MoviePageState createState() => new _MoviePageState();
 }
 class _MoviePageState extends State<MoviePage> {
   loadData() async {
-    String dataURL = 'https://api.douban.com/v2/movie/coming_soon';
+    String dataURL = 'https://api.douban.com${widget.dataPath}';
+    print(dataURL);
+
     http.Response response = await http.get(dataURL);
-    print('$response');
     setState(() {
       widget.content = Movie.MovieList(json.decode(response.body));
     });
