@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_douban/page/moviePage.dart';
-
+import 'package:flutter_douban/idea/donate.dart';
+import 'package:flutter_douban/utils/Utils.dart';
 void main() => runApp(new MyApp());
 
 class MyApp extends StatelessWidget {
@@ -154,20 +155,29 @@ class DrawerLayout extends StatelessWidget {
                 child: new Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    new Text('QQ:708959817',style: Theme.of(context).textTheme.subhead),
-                    new Text('E-mail:rhymelph@qq.com',style: Theme.of(context).textTheme.subhead),
+                    new QQCallText(qqNumber: '708959817'),
+                    new Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4.0),
+                      child: new EmailText(email: 'rhymelph@qq.com',title: '关于flutter_douban应用的一些建议',),
+                    ),
                   ],
                 ),
               ),
             ],
           ),
         ),
+        new DonateListTile(
+          icon: new Icon(Icons.supervisor_account),
+          child: new Text('支持'),
+          authorDes: '给作者买颗七彩棒棒糖怎么样?',
+          title: '支持一下',
+        ),
         new AboutListTile(
           icon: new Icon(Icons.person),
           child: new Text('关于'),
           applicationLegalese: '一个关于豆瓣内容的demo,本项目用于学习研究,如用于商业用途,后果自负',
           applicationName: '豆瓣Flutter版',
-          applicationVersion: '1.0',
+          applicationVersion: 'version:1.1-debug',
         ),
       ],
     );

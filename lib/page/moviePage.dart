@@ -3,6 +3,7 @@ import 'package:flutter_douban/entity/movie.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_douban/info/movie_info.dart';
+
 class MoviePage extends StatefulWidget {
   MoviePage(this.dataPath);
   final String dataPath;

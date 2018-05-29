@@ -1,11 +1,10 @@
-# flutter_douban
+# 豆瓣Flutter版
 
-A new Flutter about to douban.
+一款基于豆瓣api2.0的小demo
 
-## Getting Started
+## 获取demo
 
-For help getting started with Flutter, view our online
-[documentation](https://flutter.io/).
+[点击我下载](https://github.com/rhylme/flutter_douban/blob/master/apk/app.apk?raw=true)
 
 ## 持续更新
 
@@ -15,8 +14,10 @@ For help getting started with Flutter, view our online
  <img src="/gif/index.gif" width="240px" height="426px"/>
 
 ## 1.1版本
-> Android版添加分享功能,现在可以在电影详情里点击分享
-> 添加TabBar,现在可以获取正在热播,即将上映,Top250的电影
-> 上一张图
+> 1. Android版添加分享功能,现在可以在电影详情里点击分享
+
+> 2. 添加TabBar,现在可以获取正在热播,即将上映,Top250的电影
+
+> 3. 上一张图
 
  <img src="/gif/index1.1.gif" width="240px" height="426px"/>

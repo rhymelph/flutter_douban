@@ -3,8 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_douban/entity/movie.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_douban/entity/movie_info.dart';
-
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_douban/utils/Utils.dart';
 class MovieInfoPage extends StatefulWidget {
   MovieInfoPage({this.movie});
 
@@ -52,14 +54,14 @@ class _MovieInfoPageState extends State<MovieInfoPage> {
     return sb.length > 1 ? sb.substring(0, sb.length - 1) : sb;
   }
 
-  _getCastList(){
-    return new  List<Widget>.generate(info.casts.length, (index){
-      CastsBean castsBean=info.casts[index];
-      return new Expanded(child: new Column(
+  _getCastList() {
+    return new List<Widget>.generate(info.casts.length, (index) {
+      CastsBean castsBean = info.casts[index];
+      return new Expanded(
+          child: new Column(
         children: <Widget>[
           new Image.network(
-            castsBean.avatars==null?"":castsBean.avatars.medium,
-
+            castsBean.avatars == null ? "" : castsBean.avatars.medium,
             width: 100.0,
             height: 100.0,
           ),
@@ -68,17 +70,17 @@ class _MovieInfoPageState extends State<MovieInfoPage> {
       ));
     });
   }
-  _getComment() {
 
-  }
+  _getComment() {}
 
-  _getDirectors(){
-    return new  List<Widget>.generate(info.directors.length, (index){
-      DirectorsBean directorsBean=info.directors[index];
-      return new Expanded(child: new Column(
+  _getDirectors() {
+    return new List<Widget>.generate(info.directors.length, (index) {
+      DirectorsBean directorsBean = info.directors[index];
+      return new Expanded(
+          child: new Column(
         children: <Widget>[
           new Image.network(
-            directorsBean.avatars==null?"":directorsBean.avatars.medium,
+            directorsBean.avatars == null ? "" : directorsBean.avatars.medium,
             width: 100.0,
             height: 100.0,
           ),
@@ -87,6 +89,7 @@ class _MovieInfoPageState extends State<MovieInfoPage> {
       ));
     });
   }
+
   _getBody() {
     return new ListView(
       children: <Widget>[
@@ -104,14 +107,31 @@ class _MovieInfoPageState extends State<MovieInfoPage> {
                 child: new Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    new Text('原名:${info.original_title}',style: Theme.of(context).textTheme.title,),
+                    new Text(
+                      '原名:${info.original_title}',
+                      style: Theme.of(context).textTheme.title,
+                    ),
                     new Text('年代:${info.year}'),
                     new Text('影评数:${info.reviews_count}'),
                     new Text('评分人数:${info.ratings_count}'),
                     new Text('类型:${_formatString(info.genres)}'),
                     new Text('制片国家/地区:${_formatString(info.countries)}'),
-                    new Text('${info.wish_count}人想看',style: Theme.of(context).textTheme.body1.copyWith(color: Colors.red),),
-                    new Text('${info.collect_count}人看过',style: Theme.of(context).textTheme.body1.copyWith(color: Colors.red),),
+                    new Text(
+                      '${info.wish_count}人想看',
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .body1
+                          .copyWith(color: Colors.red),
+                    ),
+                    new Text(
+                      '${info.collect_count}人看过',
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .body1
+                          .copyWith(color: Colors.red),
+                    ),
                   ],
                 ),
               ))
@@ -122,69 +142,93 @@ class _MovieInfoPageState extends State<MovieInfoPage> {
           alignment: Alignment.topLeft,
           child: new Container(
               padding: const EdgeInsets.all(4.0),
-              child: new Text('导演:',style: Theme.of(context).textTheme.title.copyWith(color: Colors.blue),)),
+              child: new Text(
+                '导演:',
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .title
+                    .copyWith(color: Colors.blue),
+              )),
         ),
         new Row(
-          children:_getDirectors(),
+          children: _getDirectors(),
         ),
         new Align(
           alignment: Alignment.topLeft,
           child: new Container(
               padding: const EdgeInsets.all(4.0),
-              child: new Text('主演:',style: Theme.of(context).textTheme.title.copyWith(color: Colors.blue),)),
+              child: new Text(
+                '主演:',
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .title
+                    .copyWith(color: Colors.blue),
+              )),
         ),
         new Row(
-          children:_getCastList(),
+          children: _getCastList(),
         ),
         new Align(
           alignment: Alignment.topLeft,
           child: new Container(
               padding: const EdgeInsets.all(4.0),
-              child: new Text('介绍:',style: Theme.of(context).textTheme.title.copyWith(color: Colors.blue),)),
+              child: new Text(
+                '介绍:',
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .title
+                    .copyWith(color: Colors.blue),
+              )),
         ),
         new Container(
-            padding: const EdgeInsets.all(4.0),
-            child: new Text(info.summary)),
-        new Container(
-          child: new DecoratedBox(decoration: new BoxDecoration(
-              gradient: new RadialGradient(colors: <Color>[
-                Colors.lightBlue,
-                Colors.red,
-              ],radius: 0.15
-                  ,center: const Alignment(-0.5, -0.5)
-                  ,stops: <double>[0.9,1.0])
-          )),
-          height: 2.0,
+            padding: const EdgeInsets.all(4.0), child: new Text(info.summary)),
+        new Divider(
+          height: 1.0,
+          color: Colors.red,
         ),
         new Align(
           alignment: Alignment.topLeft,
           child: new Container(
               padding: const EdgeInsets.all(4.0),
-              child: new Text('影评:(豆瓣api无权限,所以没有)',style: Theme.of(context).textTheme.title.copyWith(color: Colors.blue),)),
+              child: new Text(
+                '影评:(豆瓣api无权限,所以没有)',
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .title
+                    .copyWith(color: Colors.blue),
+              )),
         ),
       ],
     );
   }
 
-  static const platform = const MethodChannel('samples.flutter.io/share');
+  _getActions(){
+    return info==null?null:
+        <Widget>[
+          new WebIconButton(url: info.mobile_url),
+          new ShareIconButton(
+            title: info.title,
+            url: info.mobile_url,
+            summary: info.summary,
+          ),
+        ];
 
-  _share() async{
-    final bool result=await platform.invokeMethod('ShareToThis',[info.title,info.mobile_url,info.summary]);
-    print(result?'分享成功':'分享失败');
   }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(widget.movie.title),
-        actions: <Widget>[
-          new IconButton(icon: new Icon(Icons.share), onPressed: _share)
-        ],
+        actions: _getActions(),
       ),
       body: info == null ? _showProgress() : _getBody(),
     );
   }
-
 }
-const String movie_page = 'https://api.douban.com/v2/movie/subject/';
 
+const String movie_page = 'https://api.douban.com/v2/movie/subject/';

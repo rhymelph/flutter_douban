@@ -2,12 +2,14 @@ name: flutter_douban
 description: A new Flutter about to douban.
 
 dependencies:
+  url_launcher: "^3.0.1"
   flutter:
     sdk: flutter
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.0
+
 
 dev_dependencies:
   flutter_test:
