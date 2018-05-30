@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_douban/page/bookPage.dart';
 import 'package:flutter_douban/page/moviePage.dart';
 import 'package:flutter_douban/idea/donate.dart';
 import 'package:flutter_douban/utils/Utils.dart';
@@ -37,6 +38,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   var moviePage;
+  var bookPage;
 
   _getbody() {
     switch (index) {
@@ -50,9 +52,11 @@ class _HomePageState extends State<HomePage> {
         }
         return moviePage;
       case 1:
-        return new Center(
-          child: new Text('图书'),
-        );
+        if(bookPage==null){
+          bookPage=new BookPage();
+
+        }
+        return bookPage;
       case 2:
         return new Center(
           child: new Text('音乐'),
@@ -78,7 +82,8 @@ class _HomePageState extends State<HomePage> {
   }
   
   _MovieTab(){
-    return new TabBar(isScrollable: true
+    return new TabBar(
+        isScrollable: true
         ,tabs:movie_tabs.map((MovieTab tab){
           return new Tab(
             text: tab.title,

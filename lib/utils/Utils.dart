@@ -148,6 +148,20 @@ class QQCallText extends StatelessWidget {
   }
 }
 
+//显示加载转圈
+class LoadingProgress extends StatelessWidget{
+  getProgressDialog() {
+    return new Center(
+      child: new CircularProgressIndicator(),
+    );
+  }
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return getProgressDialog();
+  }
+}
+
 
 
 

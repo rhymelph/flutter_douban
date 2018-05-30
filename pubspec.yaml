@@ -3,6 +3,7 @@ description: A new Flutter about to douban.
 
 dependencies:
   url_launcher: "^3.0.1"
+  html: "^0.13.3"
   flutter:
     sdk: flutter
 

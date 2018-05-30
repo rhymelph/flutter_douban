@@ -65,7 +65,7 @@ class _MovieInfoPageState extends State<MovieInfoPage> {
             width: 100.0,
             height: 100.0,
           ),
-          new Text(castsBean.name),
+          new Text(castsBean.name,maxLines: 1,),
         ],
       ));
     });
@@ -84,7 +84,7 @@ class _MovieInfoPageState extends State<MovieInfoPage> {
             width: 100.0,
             height: 100.0,
           ),
-          new Text(directorsBean.name),
+          new Text(directorsBean.name,maxLines: 1,),
         ],
       ));
     });
