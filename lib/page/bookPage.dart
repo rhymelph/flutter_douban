@@ -30,31 +30,25 @@ class _BookPageState extends State<BookPage> {
 //      widget.content = Movie.MovieList(json.decode(response.body));
 //    });
   }
-  _getCount(){
-    int count=0;
-    for(BookTitleList list in widget.bookTitleList){
-      count= count+list.bookList.length;
-    }
-    return count;
-  }
 
 
   _getbody() {
-    List<Widget> bookList=[];
-    widget.bookTitleList.forEach((list){
-      bookList.add(new GridView.builder(
-          shrinkWrap: true,
-          itemCount: list.bookList.length,
+    List<Widget> bookList = [];
+    widget.bookTitleList.forEach((list) {
+      bookList.add(new SliverPersistentHeader(
+          delegate: new BookTitle(title: list.title) ));
+      bookList.add(new SliverGrid(
+          delegate:
+              new SliverChildBuilderDelegate((BuildContext context, index) {
+            return new BookItem(
+              book: list.bookList[index],
+            );
+          }, childCount: list.bookList.length),
           gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 5.0,
               mainAxisSpacing: 5.0,
-              childAspectRatio: 0.7),
-          itemBuilder: (context, index) {
-            return new BookItem(
-              book:list.bookList[index],
-            );
-          }));
+              childAspectRatio: 0.7)));
     });
     return new CustomScrollView(
       slivers: bookList,
@@ -65,7 +59,6 @@ class _BookPageState extends State<BookPage> {
   Widget build(BuildContext context) {
     return new Center(
       child: new Container(
-        padding: const EdgeInsets.all(8.0),
         child:
             widget.bookTitleList == null ? new LoadingProgress() : _getbody(),
       ),
@@ -73,6 +66,30 @@ class _BookPageState extends State<BookPage> {
   }
 }
 
+class BookTitle extends SliverPersistentHeaderDelegate{
+  final String title;
+  BookTitle({@required this.title,this.height});
+  final double height;
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    // TODO: implement build
+    return new Container(child: new Center(child: new Text(title??'标题',style: Theme.of(context).textTheme.title,)));
+  }
+  // TODO: implement maxExtent
+  @override
+  double get maxExtent => height??60.0;
+
+  // TODO: implement minExtent
+  @override
+  double get minExtent => height??50.0;
+
+  @override
+  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
+    // TODO: implement shouldRebuild
+    return true;
+  }
+
+}
 class BookItem extends StatelessWidget {
   final Book book;
 

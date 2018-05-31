@@ -187,7 +187,7 @@ class DrawerLayout extends StatelessWidget {
           child: new Text('关于'),
           applicationLegalese: '一个关于豆瓣内容的demo,本项目用于学习研究,如用于商业用途,后果自负',
           applicationName: '豆瓣Flutter版',
-          applicationVersion: 'version:1.1-debug',
+          applicationVersion: 'version:1.2',
         ),
       ],
     );
