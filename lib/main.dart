@@ -47,7 +47,8 @@ class _HomePageState extends State<HomePage> {
           moviePage = new TabBarView(
               children: movie_tabs.map((MovieTab tab){
                 if(tab.page==null){
-                  tab.page=new MoviePage(tab.address);
+                  tab.offset=0.0;
+                  tab.page=new MoviePage(tab.address,tab.offset);
                 }
                 return new Padding(padding: const EdgeInsets.all(8.0),
                 child: tab.page,);
@@ -86,7 +87,7 @@ class _HomePageState extends State<HomePage> {
   
   _MovieTab(){
     return new TabBar(
-        isScrollable: true
+        isScrollable: false
         ,tabs:movie_tabs.map((MovieTab tab){
           return new Tab(
             text: tab.title,
@@ -99,6 +100,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return new DefaultTabController(
+
       length: movie_tabs.length,
       child: new Scaffold(
         appBar: new AppBar(
@@ -203,6 +205,8 @@ class MovieTab {
   final String title;
   final String address;
    Widget page;
+   double offset;
+
   MovieTab(this.iconData,this.title, this.address);
 }
 

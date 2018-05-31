@@ -7,10 +7,12 @@ import 'package:flutter_douban/utils/Utils.dart';
 import 'package:flutter_douban/info/movie_info.dart';
 
 class MoviePage extends StatefulWidget {
-  MoviePage(this.dataPath);
-
+  MoviePage(this.dataPath,this.offset);
   final String dataPath;
   List<Movie> content;
+  ScrollController controller;
+  bool isLoad=false;
+  double offset;
 
   @override
   _MoviePageState createState() => new _MoviePageState();
@@ -37,27 +39,37 @@ class _MoviePageState extends State<MoviePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    loadData();
+    if(!widget.isLoad){
+      widget.isLoad=true;
+      loadData();
+    }
   }
-
   @override
   Widget build(BuildContext context) {
-    return new Center(
+      widget.controller=new ScrollController(initialScrollOffset: widget.offset);
+      widget.controller.addListener((){
+        widget.offset=widget.controller.offset;
+      });
+    Widget body=new Center(
       child: new Container(
         child: widget.content != null
             ? new RefreshIndicator(
-                child: new ListView.builder(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                    itemCount: widget.content.length,
-                    itemBuilder: (context, index) {
-                      return new MovieItem(movie: widget.content[index]);
-                    }),
-                onRefresh: _onRefresh,
-              )
+          child: new ListView.builder(
+              controller: widget.controller,
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: widget.content.length,
+              itemBuilder: (context, index) {
+                return new MovieItem(movie: widget.content[index]);
+              }),
+          onRefresh: _onRefresh,
+        )
             : new LoadingProgress(),
       ),
     );
+
+    return body;
   }
+
 }
 
 class MovieItem extends StatelessWidget {
