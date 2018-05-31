@@ -1,6 +1,6 @@
 # 豆瓣Flutter版
 
-一款基于豆瓣api2.0的小demo(更多详情请登陆官网 https://www.douban.com/)
+一款基于豆瓣api2.0的小demo(更多详情请登陆[官网](https://www.douban.com) )
 
 ## 获取apk[1.2版本](目前只支持安卓的demo)
 
@@ -32,7 +32,7 @@
 
 > 3. 现在右滑抽屉高亮部分都可以点击
 
-> 4. 添加图书列表(通过html插件爬取豆瓣图书网页(https://book.douban.com),豆瓣大佬别打我[滑稽])
+> 4. 添加图书列表(通过html插件爬取[豆瓣图书网页](https://book.douban.com),豆瓣大佬别打我[滑稽])
 
 > 5. 例行上图
 
