@@ -38,26 +38,27 @@ class _BookPageState extends State<BookPage> {
     return count;
   }
 
+
   _getbody() {
-    int index=0;
-    int length=0;
-    return new GridView.builder(
-        shrinkWrap: true,
-        itemCount: _getCount(),
-        gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 5.0,
-            mainAxisSpacing: 5.0,
-            childAspectRatio: 0.7),
-        itemBuilder: (context, index2) {
-          if(index2>widget.bookTitleList[index].bookList.length){
-            length =length+widget.bookTitleList[index].bookList.length;
-            index++;
-          }
-          return new BookItem(
-            book: widget.bookTitleList[index].bookList[index2-length],
-          );
-        });
+    List<Widget> bookList=[];
+    widget.bookTitleList.forEach((list){
+      bookList.add(new GridView.builder(
+          shrinkWrap: true,
+          itemCount: list.bookList.length,
+          gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 5.0,
+              mainAxisSpacing: 5.0,
+              childAspectRatio: 0.7),
+          itemBuilder: (context, index) {
+            return new BookItem(
+              book:list.bookList[index],
+            );
+          }));
+    });
+    return new CustomScrollView(
+      slivers: bookList,
+    );
   }
 
   @override

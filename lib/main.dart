@@ -46,8 +46,11 @@ class _HomePageState extends State<HomePage> {
         if (moviePage == null) {
           moviePage = new TabBarView(
               children: movie_tabs.map((MovieTab tab){
+                if(tab.page==null){
+                  tab.page=new MoviePage(tab.address);
+                }
                 return new Padding(padding: const EdgeInsets.all(8.0),
-                child: new MoviePage(tab.address),);
+                child: tab.page,);
               }).toList());
         }
         return moviePage;
@@ -199,7 +202,7 @@ class MovieTab {
   final IconData iconData;
   final String title;
   final String address;
-
+   Widget page;
   MovieTab(this.iconData,this.title, this.address);
 }
 
