@@ -1,9 +1,18 @@
+import 'package:flutter/material.dart';
 
+class MovieTab {
+  final IconData iconData;
+  final String title;
+  final String address;
+  Widget page;
+  double offset;
+  MovieTab(this.iconData,this.title, this.address);
+}
 class Movie{
   final String title;//标题
-  final String original_title;//原标题
+  final String originalTitle;//原标题
   final RatingBean rating;
-  final int collect_count;
+  final int collectCount;
   final String subtype;
   final String year;
   final ImagesBean images;
@@ -13,7 +22,7 @@ class Movie{
   final List<CastsBean> casts;
   final List<DirectorsBean> directors;
 
-  Movie(this.title, this.original_title, this.rating, this.collect_count, this.subtype, this.year, this.images, this.alt, this.id, this.genres, this.casts, this.directors);
+  Movie(this.title, this.originalTitle, this.rating, this.collectCount, this.subtype, this.year, this.images, this.alt, this.id, this.genres, this.casts, this.directors);
 
   factory Movie.formJson(Map<String,dynamic> json){
     List<String> genres=json['genres']!=null?new List<String>.generate(json['genres'].length, (index){
@@ -41,7 +50,7 @@ class Movie{
         , directors ) ;
   }
 
-  static List<Movie> MovieList(Map<String,dynamic> json){
+  static List<Movie> movieList(Map<String,dynamic> json){
     List<Movie> movieList=new List<Movie>
         .generate(json['subjects'].length, (index){
        var obj= json['subjects'][index];

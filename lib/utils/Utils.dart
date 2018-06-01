@@ -162,6 +162,23 @@ class LoadingProgress extends StatelessWidget{
   }
 }
 
+class LoadingError extends StatelessWidget{
+  LoadingError({@required this.voidCallback});
+  final VoidCallback voidCallback;
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return new Center(
+      child: new RaisedButton(
+          textColor: Colors.green,
+          child: new Text('加载失败，点击重新加载'),
+          onPressed: voidCallback),
+    );
+  }
+
+}
+
 
 
 

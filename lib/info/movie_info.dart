@@ -73,7 +73,7 @@ class _MovieInfoPageState extends State<MovieInfoPage> {
 
   _getComment() {}
 
-  _getDirectors() {
+  _getDirectors() {//获取导演
     return new List<Widget>.generate(info.directors.length, (index) {
       DirectorsBean directorsBean = info.directors[index];
       return new Expanded(
@@ -90,7 +90,7 @@ class _MovieInfoPageState extends State<MovieInfoPage> {
     });
   }
 
-  _getBody() {
+  _getBody() {//获取主要界面
     return new ListView(
       children: <Widget>[
         new Container(
@@ -206,7 +206,7 @@ class _MovieInfoPageState extends State<MovieInfoPage> {
     );
   }
 
-  _getActions(){
+  _getActions(){//获取顶部action,两个按钮
     return info==null?null:
         <Widget>[
           new WebIconButton(url: info.mobile_url),

@@ -24,7 +24,7 @@ class _MoviePageState extends State<MoviePage> {
     print(dataURL);
     http.Response response = await http.get(dataURL);
     setState(() {
-      widget.content = Movie.MovieList(json.decode(response.body));
+      widget.content = Movie.movieList(json.decode(response.body));
     });
   }
 
@@ -44,12 +44,17 @@ class _MoviePageState extends State<MoviePage> {
       loadData();
     }
   }
+
+  //save the listView offset
+  _initController(){
+    widget.controller=new ScrollController(initialScrollOffset: widget.offset);
+    widget.controller.addListener((){
+      widget.offset=widget.controller.offset;
+    });
+  }
   @override
   Widget build(BuildContext context) {
-      widget.controller=new ScrollController(initialScrollOffset: widget.offset);
-      widget.controller.addListener((){
-        widget.offset=widget.controller.offset;
-      });
+     _initController();
     Widget body=new Center(
       child: new Container(
         child: widget.content != null
@@ -66,10 +71,8 @@ class _MoviePageState extends State<MoviePage> {
             : new LoadingProgress(),
       ),
     );
-
     return body;
   }
-
 }
 
 class MovieItem extends StatelessWidget {
@@ -135,7 +138,7 @@ class MovieItem extends StatelessWidget {
                       new Text('主演:${_formatCasts()}'),
                       new Text('评分:${movie.rating.stars}'),
                       new Text(
-                        '${movie.collect_count}人看过',
+                        '${movie.collectCount}人看过',
                         style: Theme
                             .of(context)
                             .textTheme

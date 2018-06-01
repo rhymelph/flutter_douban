@@ -5,6 +5,7 @@ import 'package:flutter_douban/utils/Utils.dart';
 
 class BookPage extends StatefulWidget {
   List<BookTitleList> bookTitleList;
+  bool isLoad=false;
 
   @override
   _BookPageState createState() => new _BookPageState();
@@ -14,7 +15,10 @@ class _BookPageState extends State<BookPage> {
   @override
   void initState() {
     super.initState();
-    loadData();
+    if(!widget.isLoad){
+      widget.isLoad=true;
+      loadData();
+    }
   }
 
   loadData() async {
