@@ -1,181 +1,261 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_douban/entity/book.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_douban/http/HttpManagert.dart' as HttpManager;
 import 'package:flutter_douban/utils/Utils.dart';
+import 'package:flutter_douban/info/book_info.dart';
 
 class BookPage extends StatefulWidget {
+  BookPage(this.offset);
+
   List<BookTitleList> bookTitleList;
-  bool isLoad=false;
+  bool isLoad = false;
+  ScrollController controller;
+  double offset;
 
   @override
-  _BookPageState createState() => new _BookPageState();
+  _BookPageState createState() {
+    return _BookPageState();
+  }
 }
 
 class _BookPageState extends State<BookPage> {
+  bool isSuccess = true;
+
+  //save the listView offset
+  void _initController() {
+    widget.controller = ScrollController(initialScrollOffset: widget.offset);
+    widget.controller.addListener(() {
+      widget.offset = widget.controller.offset;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    if(!widget.isLoad){
-      widget.isLoad=true;
+    if (!widget.isLoad) {
       loadData();
     }
   }
 
   loadData() async {
-    String dataURL = 'https://book.douban.com/';
-    print(dataURL);
-    http.Response response = await http.get(dataURL);
-    String body = response.body;
-    List<BookTitleList> temp = BookTitleList.getFromHtml(body);
-    setState(() {
-      widget.bookTitleList = temp;
-    });
-//    setState(() {
-//      widget.content = Movie.MovieList(json.decode(response.body));
-//    });
+    String url = 'https://book.douban.com/';
+    print(url);
+    HttpManager.get(
+        url: url,
+        onError: (Object e) {
+          setState(() {
+            widget.bookTitleList = null;
+            isSuccess = false;
+          });
+        },
+        onSuccess: (String body) {
+          List<BookTitleList> temp = BookTitleList.getFromHtml(body);
+          setState(() {
+            widget.isLoad = true;
+            widget.bookTitleList = temp;
+          });
+        },
+        onSend: () {
+          setState(() {
+            isSuccess = true;
+          });
+        });
   }
 
+  _getLoading() {
+    if (isSuccess) {
+      return LoadingProgress();
+    } else {
+      return LoadingError(
+        voidCallback: loadData,
+      );
+    }
+  }
 
-  _getbody() {
+  _getBody() {
+    _initController();
+
     List<Widget> bookList = [];
     widget.bookTitleList.forEach((list) {
-      bookList.add(new SliverPersistentHeader(
-          delegate: new BookTitle(title: list.title) ));
-      bookList.add(new SliverGrid(
-          delegate:
-              new SliverChildBuilderDelegate((BuildContext context, index) {
-            return new BookItem(
+      bookList
+          .add(SliverPersistentHeader(delegate: BookTitle(title: list.title)));
+      bookList.add(SliverGrid(
+          delegate: SliverChildBuilderDelegate((BuildContext context, index) {
+            return BookItem(
               book: list.bookList[index],
             );
           }, childCount: list.bookList.length),
-          gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 5.0,
               mainAxisSpacing: 5.0,
               childAspectRatio: 0.7)));
     });
-    return new CustomScrollView(
+    return CustomScrollView(
+      controller: widget.controller,
       slivers: bookList,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return new Center(
-      child: new Container(
-        child:
-            widget.bookTitleList == null ? new LoadingProgress() : _getbody(),
+    return Center(
+      child: Container(
+        child: widget.bookTitleList == null ? _getLoading() : _getBody(),
       ),
     );
   }
 }
 
-class BookTitle extends SliverPersistentHeaderDelegate{
+//title项
+class BookTitle extends SliverPersistentHeaderDelegate {
   final String title;
-  BookTitle({@required this.title,this.height});
+
+  BookTitle({@required this.title, this.height});
+
   final double height;
+  BuildContext context;
+
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
     // TODO: implement build
-    return new Container(child: new Center(child: new Text(title??'标题',style: Theme.of(context).textTheme.title,)));
+    this.context = context;
+    return Container(
+        child: Center(
+            child: Text(
+      title ?? '标题',
+      style: Theme.of(context).textTheme.title,
+    )));
   }
+
   // TODO: implement maxExtent
   @override
-  double get maxExtent => height??60.0;
+  double get maxExtent => height ?? 60.0;
 
   // TODO: implement minExtent
   @override
-  double get minExtent => height??50.0;
+  double get minExtent => height ?? Theme.of(context).textTheme.title.fontSize;
 
   @override
   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
     // TODO: implement shouldRebuild
     return true;
   }
-
 }
+
+//item项
 class BookItem extends StatelessWidget {
   final Book book;
 
-  const BookItem({Key key, this.book}) : super(key: key);
+  BookItem({this.book}) : super(key: ObjectKey(book));
 
   _getRatings() {
-    int star_count = (book.ratings_value ~/ 2).toInt();
-    var star_widget = new List<Widget>.generate(star_count, (index) {
+    int starCount = (book.ratingsValue ~/ 2).toInt();
+    var starWidget = new List<Widget>.generate(starCount, (index) {
       return new Icon(
         Icons.star,
         color: Colors.yellow,
         size: 15.0,
       );
     });
-    var nostar_widget = new List<Widget>.generate(5 - star_count, (index) {
+    var noStarWidget = new List<Widget>.generate(5 - starCount, (index) {
       return new Icon(
         Icons.star,
         color: Colors.grey,
         size: 15.0,
       );
     });
-
-    star_widget.addAll(nostar_widget);
-    star_widget.add(new Text(
-      '${book.ratings_value}',
+    starWidget.addAll(noStarWidget);
+    starWidget.add(new Text(
+      '${book.ratingsValue}',
       style: new TextStyle(color: Colors.white),
     ));
-    return star_widget;
+    return starWidget;
+  }
+
+  _onclick(BuildContext context) {
+    Navigator.push(
+        context,
+        new PageRouteBuilder(
+            pageBuilder: (BuildContext context, _, __) {
+              return BookInfo(
+                book: book,
+              );
+            },
+            opaque: false,
+            transitionDuration: new Duration(milliseconds: 200) ,
+            transitionsBuilder:
+                (___, Animation<double> animation, ____, Widget child) {
+              return new FadeTransition(
+                opacity: animation,
+                child: new ScaleTransition(
+                  scale: new Tween<double>(begin: 0.5,end: 1.0).animate(animation),
+//                  position: new Tween<Offset>(begin: const Offset(-1.0, 0.0),end: Offset.zero)
+//                      .animate(animation),
+                  child: child,
+                ),
+              );
+            }));
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return new Card(
-      child: new Stack(
-        children: <Widget>[
-          new Image.network(
-            book.image_address,
-          ),
-          new DecoratedBox(
-            decoration: new BoxDecoration(
-                gradient: new RadialGradient(
-              center: const Alignment(0.0, -0.5),
-              colors: <Color>[
-                const Color(0x00000000),
-                const Color(0x70000000),
-              ],
-              radius: 0.60,
-              stops: <double>[0.3, 1.0],
-            )),
-            child: new Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                new Center(
-                  child: new Text(
-                    book.name,
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .title
-                        .copyWith(color: Colors.white),
-                  ),
-                ),
-                new Center(
-                  child: new Text(
-                    book.author,
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .subhead
-                        .copyWith(color: Colors.white, fontSize: 10.0),
-                  ),
-                ),
-                new Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: _getRatings(),
-                ),
-              ],
+    return new GestureDetector(
+      onTap: () {
+        _onclick(context);
+      },
+      child: Card(
+        child: Stack(
+          children: <Widget>[
+            Image.network(
+              book.imageAddress,
             ),
-          )
-        ],
+            DecoratedBox(
+              decoration: BoxDecoration(
+                  gradient: RadialGradient(
+                center: const Alignment(0.0, -0.5),
+                colors: <Color>[
+                  const Color(0x00000000),
+                  const Color(0x70000000),
+                ],
+                radius: 0.60,
+                stops: <double>[0.3, 1.0],
+              )),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Center(
+                    child: Text(
+                      book.name,
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .title
+                          .copyWith(color: Colors.white),
+                    ),
+                  ),
+                  Center(
+                    child: Text(
+                      book.author,
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .subhead
+                          .copyWith(color: Colors.white, fontSize: 10.0),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: _getRatings(),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

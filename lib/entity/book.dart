@@ -1,10 +1,8 @@
 import 'package:html/dom.dart';
 
-import 'package:html/dom_parsing.dart';
 
 import 'package:html/parser.dart';
 
-import 'package:html/parser_console.dart';
 class BookTitleList{
   final String title;
   final List<Book> bookList;
@@ -18,26 +16,34 @@ class BookTitleList{
     List<Book> d=[];
     c.forEach((e){
       var f=e.getElementsByTagName('img').first.attributes;
-      String image_addrress;
+      var g=e.getElementsByTagName('a').first.attributes;
+      String address;
+
+      g.forEach((a,b){
+        if(a.toString()=='href'){
+          address=b;
+        }
+      });
+      String imageAddress;
       String name;
       f.forEach((a,b){
         if(a.toString()=='src'){
-          image_addrress=b;
+          imageAddress=b;
         }else if(a.toString() =='alt'){
           name=b;
         }
       });
       List<Element> star=e.getElementsByClassName('entry-star-small');
-      double star_value=0.0;
+      double starValue=0.0;
       if(star.length!=0){
         String value=star.first.getElementsByClassName('average-rating').first.text.replaceAll(" ", '');
-        star_value=double.parse(value);
+        starValue=double.parse(value);
       }
       String author=e.getElementsByClassName('author').first.text.replaceAll(" ", '').replaceAll("\n", '');
       if(!author.contains('作者')){
         author='作者：$author';
       }
-      d.add(Book(name, image_addrress,author,star_value)) ;
+      d.add(Book(name, imageAddress,author,starValue,address)) ;
     });
     return  BookTitleList(oneList, d);
   }
@@ -52,9 +58,10 @@ class BookTitleList{
 
 class Book{
   final String name;
-  final String image_address;
-  final double ratings_value;
+  final String imageAddress;
+  final double ratingsValue;
   final String author;
+  final String address;
 
-  Book(this.name, this.image_address, this.author,this.ratings_value);
+  Book(this.name, this.imageAddress, this.author,this.ratingsValue,this.address);
 }

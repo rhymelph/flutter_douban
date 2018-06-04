@@ -20,8 +20,8 @@ class ShareIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return new IconButton(
-        icon: new Icon(Icons.share), onPressed: (){
+    return  IconButton(
+        icon:  Icon(Icons.share), onPressed: (){
           if(defaultTargetPlatform==TargetPlatform.iOS){
             _showDialog(context: context,
             content: '目前分享功能不支持IOS系统');
@@ -49,7 +49,7 @@ class WebIconButton extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return  new IconButton(icon: new Icon(Icons.web), onPressed:(){ _openByWeb(context);});
+    return   IconButton(icon:  Icon(Icons.web), onPressed:(){ _openByWeb(context);});
   }
 
 }
@@ -60,18 +60,18 @@ _showDialog({@required BuildContext context, String content}) {
     context: context,
     barrierDismissible: false, // user must tap button!
     builder: (BuildContext context) {
-      return new AlertDialog(
-        title: new Text('提示'),
-        content: new SingleChildScrollView(
-          child: new ListBody(
+      return  AlertDialog(
+        title:  Text('提示'),
+        content:  SingleChildScrollView(
+          child:  ListBody(
             children: <Widget>[
-              new Text(content),
+               Text(content),
             ],
           ),
         ),
         actions: <Widget>[
-          new FlatButton(
-            child: new Text('确定'),
+           FlatButton(
+            child:  Text('确定'),
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -96,7 +96,7 @@ class DonateFlatButton extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
-    return new FlatButton(onPressed:(){_donateAndroid(context);} , child: new Text(text));
+    return  FlatButton(onPressed:(){_donateAndroid(context);} , child:  Text(text));
   }
 }
 
@@ -106,20 +106,20 @@ class EmailText extends StatelessWidget{
   final String title;
   final String body;
 
-  _SendEmail(){
+  _sendEmail(){
     String emailCode='mailto:${email??''}?subject=${title??''}&body=${body??''}';
     launch(emailCode);
   }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return new GestureDetector(
-      onTap: _SendEmail,
-        child: new Row(
+    return  GestureDetector(
+      onTap: _sendEmail,
+        child:  Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            new Text('E-mail:',style: Theme.of(context).textTheme.subhead,),
-            new Text(email,style: Theme.of(context).textTheme.subhead.copyWith(color: Colors.lightBlue,),),
+             Text('E-mail:',style: Theme.of(context).textTheme.subhead,),
+             Text(email,style: Theme.of(context).textTheme.subhead.copyWith(color: Colors.lightBlue,),),
           ],
         ),);
   }
@@ -128,7 +128,7 @@ class EmailText extends StatelessWidget{
 class QQCallText extends StatelessWidget {
   QQCallText({@required this.qqNumber});
   final String qqNumber;
-  _CallQQ(BuildContext context) async{
+  _callQQ(BuildContext context) async{
      bool isSuccess= await utils_platform.invokeMethod('QQCallMe', [qqNumber]);
        if(!isSuccess){
          _showDialog(context: context,content: '不支持该功能或未下载QQ');
@@ -136,13 +136,13 @@ class QQCallText extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
-    return new GestureDetector(
-      onTap:(){_CallQQ(context);} ,
-      child: new Row(
+    return  GestureDetector(
+      onTap:(){_callQQ(context);} ,
+      child:  Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          new Text('QQ:',style: Theme.of(context).textTheme.subhead,),
-          new Text(qqNumber,style: Theme.of(context).textTheme.subhead.copyWith(color: Colors.lightBlue,),),
+           Text('QQ:',style: Theme.of(context).textTheme.subhead,),
+           Text(qqNumber,style: Theme.of(context).textTheme.subhead.copyWith(color: Colors.lightBlue,),),
         ],
       ),);
   }
@@ -151,8 +151,8 @@ class QQCallText extends StatelessWidget {
 //显示加载转圈
 class LoadingProgress extends StatelessWidget{
   getProgressDialog() {
-    return new Center(
-      child: new CircularProgressIndicator(),
+    return  Center(
+      child:  CircularProgressIndicator(),
     );
   }
   @override
@@ -169,14 +169,14 @@ class LoadingError extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return new Center(
-      child: new RaisedButton(
+    return  Center(
+      child:  RaisedButton(
+        color: Colors.transparent,
           textColor: Colors.green,
-          child: new Text('加载失败，点击重新加载'),
+          child:  Text('加载失败，点击重新加载'),
           onPressed: voidCallback),
     );
   }
-
 }
 
 

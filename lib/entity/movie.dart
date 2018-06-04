@@ -25,25 +25,25 @@ class Movie{
   Movie(this.title, this.originalTitle, this.rating, this.collectCount, this.subtype, this.year, this.images, this.alt, this.id, this.genres, this.casts, this.directors);
 
   factory Movie.formJson(Map<String,dynamic> json){
-    List<String> genres=json['genres']!=null?new List<String>.generate(json['genres'].length, (index){
+    List<String> genres=json['genres']!=null? List<String>.generate(json['genres'].length, (index){
       return json['genres'][index];
     }):null;
 
-    List<CastsBean> casts=json['casts']!=null?new List<CastsBean>.generate(json['casts'].length, (index){
+    List<CastsBean> casts=json['casts']!=null? List<CastsBean>.generate(json['casts'].length, (index){
       var obj=json['casts'][index];
-      return new CastsBean(obj['alt'], obj['avatars']==null?null:new AvatarsBean(obj['avatars']['small'], obj['avatars']['large'], obj['avatars']['medium']), obj['name'], obj['id']);
+      return  CastsBean(obj['alt'], obj['avatars']==null?null: AvatarsBean(obj['avatars']['small'], obj['avatars']['large'], obj['avatars']['medium']), obj['name'], obj['id']);
     }):null;
 
-    List<DirectorsBean> directors=json['directors']!=null?new List<DirectorsBean>.generate(json['directors'].length, (index){
+    List<DirectorsBean> directors=json['directors']!=null? List<DirectorsBean>.generate(json['directors'].length, (index){
       var obj=json['directors'][index];
-      return new DirectorsBean(obj['alt'], obj['avatars']==null?null:new AvatarsBean(obj['avatars']['small'], obj['avatars']['large'], obj['avatars']['medium']), obj['name'], obj['id']);
+      return  DirectorsBean(obj['alt'], obj['avatars']==null?null: AvatarsBean(obj['avatars']['small'], obj['avatars']['large'], obj['avatars']['medium']), obj['name'], obj['id']);
     }):null;
 
 
-    return new Movie(json['title'], json['original_title']
-        , new RatingBean(double.parse('${json['rating']['max']}') , double.parse('${json['rating']['average']}') , json['rating']['stars'] , double.parse('${json['rating']['min']}') )
+    return  Movie(json['title'], json['original_title']
+        ,  RatingBean(double.parse('${json['rating']['max']}') , double.parse('${json['rating']['average']}') , json['rating']['stars'] , double.parse('${json['rating']['min']}') )
         , json['collect_count'], json['subtype'], json['year']
-        , new ImagesBean(json['images']['small'], json['images']['large'], json['images']['medium'])
+        ,  ImagesBean(json['images']['small'], json['images']['large'], json['images']['medium'])
         , json['alt'], json['id']
         , genres
         , casts
@@ -51,10 +51,10 @@ class Movie{
   }
 
   static List<Movie> movieList(Map<String,dynamic> json){
-    List<Movie> movieList=new List<Movie>
+    List<Movie> movieList= List<Movie>
         .generate(json['subjects'].length, (index){
        var obj= json['subjects'][index];
-       return new Movie.formJson(obj);
+       return  Movie.formJson(obj);
     });
     return movieList;
   }

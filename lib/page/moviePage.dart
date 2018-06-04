@@ -1,37 +1,82 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_douban/entity/movie.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_douban/http/HttpManagert.dart' as HttpManager;
 import 'dart:convert';
 import 'dart:async';
 import 'package:flutter_douban/utils/Utils.dart';
 import 'package:flutter_douban/info/movie_info.dart';
 
 class MoviePage extends StatefulWidget {
-  MoviePage(this.dataPath,this.offset);
+  MoviePage(this.dataPath, this.offset);
+
   final String dataPath;
-  List<Movie> content;
+  List<Movie> movieList;
+
   ScrollController controller;
-  bool isLoad=false;
+  bool isLoad = false;
   double offset;
 
   @override
-  _MoviePageState createState() => new _MoviePageState();
+  _MoviePageState createState() => _MoviePageState();
 }
 
 class _MoviePageState extends State<MoviePage> {
+  bool isSuccess = true;
+
   loadData() async {
-    String dataURL = 'https://api.douban.com${widget.dataPath}';
-    print(dataURL);
-    http.Response response = await http.get(dataURL);
-    setState(() {
-      widget.content = Movie.movieList(json.decode(response.body));
-    });
+    String url = 'https://api.douban.com${widget.dataPath}';
+    print(url);
+    HttpManager.get(
+        url: url,
+        onSend: () {
+          setState(() {
+            isSuccess = true;
+          });
+        },
+        onSuccess: (String body) {
+          setState(() {
+            widget.isLoad = true;//加载成功后，将已加载状态设置为true
+            widget.movieList = Movie.movieList(json.decode(body));
+          });
+        },
+        onError: (Object e) {
+          setState(() {
+            widget.movieList = null;
+            isSuccess = false;
+          });
+        });
+  }
+
+  //加载中。。。
+  _loading() {
+    if (isSuccess) {
+      return LoadingProgress();
+    } else {
+      return LoadingError(
+        voidCallback: loadData,
+      );
+    }
+  }
+
+  //加载成功显示。。。
+  _body() {
+    _initController();
+    return RefreshIndicator(
+      child: ListView.builder(
+          controller: widget.controller,
+          physics: const AlwaysScrollableScrollPhysics(),
+          itemCount: widget.movieList.length,
+          itemBuilder: (context, index) {
+            return MovieItem(movie: widget.movieList[index]);
+          }),
+      onRefresh: _onRefresh,
+    );
   }
 
   //刷新按钮
   Future<Null> _onRefresh() async {
-    return new Future.delayed(new Duration(milliseconds: 1000), () {
-        loadData();
+    return Future.delayed(Duration(milliseconds: 1000), () {
+      loadData();
     });
   }
 
@@ -39,36 +84,24 @@ class _MoviePageState extends State<MoviePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if(!widget.isLoad){
-      widget.isLoad=true;
+    if (!widget.isLoad) {
       loadData();
     }
   }
 
   //save the listView offset
-  _initController(){
-    widget.controller=new ScrollController(initialScrollOffset: widget.offset);
-    widget.controller.addListener((){
-      widget.offset=widget.controller.offset;
+  void _initController() {
+    widget.controller = ScrollController(initialScrollOffset: widget.offset);
+    widget.controller.addListener(() {
+      widget.offset = widget.controller.offset;
     });
   }
+
   @override
   Widget build(BuildContext context) {
-     _initController();
-    Widget body=new Center(
-      child: new Container(
-        child: widget.content != null
-            ? new RefreshIndicator(
-          child: new ListView.builder(
-              controller: widget.controller,
-              physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: widget.content.length,
-              itemBuilder: (context, index) {
-                return new MovieItem(movie: widget.content[index]);
-              }),
-          onRefresh: _onRefresh,
-        )
-            : new LoadingProgress(),
+    Widget body = Center(
+      child: Container(
+        child: widget.movieList == null ? _loading() : _body(),
       ),
     );
     return body;
@@ -78,13 +111,13 @@ class _MoviePageState extends State<MoviePage> {
 class MovieItem extends StatelessWidget {
   final Movie movie;
 
-  MovieItem({this.movie});
+  MovieItem({this.movie}) : super(key: new ObjectKey(movie));
 
   _onClick(BuildContext context) {
     Navigator.push(
         context,
-        new MaterialPageRoute(
-            builder: (context) => new MovieInfoPage(
+        MaterialPageRoute(
+            builder: (context) => MovieInfoPage(
                   movie: movie,
                 )));
   }
@@ -109,35 +142,35 @@ class MovieItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return new GestureDetector(
+    return GestureDetector(
       onTap: () {
         _onClick(context);
       },
-      child: new Card(
-        child: new Container(
+      child: Card(
+        child: Container(
           padding: const EdgeInsets.all(8.0),
-          child: new Row(
+          child: Row(
             children: <Widget>[
-              new Image.network(
+              Image.network(
                 movie.images.large,
                 width: 100.0,
                 height: 150.0,
               ),
-              new Expanded(
-                child: new Padding(
+              Expanded(
+                child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: new Column(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      new Text(
+                      Text(
                         movie.title,
                         style: Theme.of(context).textTheme.title,
                       ),
-                      new Text('类型:${_formatGeners()}'),
-                      new Text('年份:${movie.year}'),
-                      new Text('主演:${_formatCasts()}'),
-                      new Text('评分:${movie.rating.stars}'),
-                      new Text(
+                      Text('类型:${_formatGeners()}'),
+                      Text('年份:${movie.year}'),
+                      Text('主演:${_formatCasts()}'),
+                      Text('评分:${movie.rating.stars}'),
+                      Text(
                         '${movie.collectCount}人看过',
                         style: Theme
                             .of(context)
