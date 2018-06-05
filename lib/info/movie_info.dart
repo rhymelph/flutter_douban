@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_douban/entity/movie.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_douban/http/HttpManagert.dart' as HttpManager;
 import 'dart:convert';
 import 'package:flutter_douban/entity/movie_info.dart';
 import 'package:flutter_douban/utils/Utils.dart';
@@ -16,31 +16,34 @@ class MovieInfoPage extends StatefulWidget {
 
 class _MovieInfoPageState extends State<MovieInfoPage> {
   MovieInfo info;
+  bool isSuccess=true;
 
   @override
   void initState() {
     // TODO: implement initState
-    _initData();
     super.initState();
+    _loadData();
   }
 
-  _showProgress() {
-    return Center(child: CircularProgressIndicator());
-  }
-
-  _initData() async {
-    String infoUrl = '$movie_page${widget.movie.id}';
-    print(infoUrl);
-    http.Response response = await http.get(infoUrl);
-
-    //权限问题,影评暂时不获取
-//    String commentUrl='$movie_page${widget.movie.id}/reviews';
-//
-//    http.Response comment_res=await http.get(commentUrl);
-//    print(comment_res.body);
-
-    setState(() {
-      info = MovieInfo.forJson(json.decode(response.body));
+  _loadData() async {
+    String url = '$movie_page${widget.movie.id}';
+    print(url);
+    HttpManager.get(url: url,
+    onSend: (){
+      setState(() {
+        isSuccess=true;
+      });
+    },
+    onSuccess: (String body){
+      setState(() {
+        info = MovieInfo.forJson(json.decode(body));
+      });
+    },
+    onError: (Object error){
+      setState(() {
+        info=null;
+        isSuccess=false;
+      });
     });
   }
 
@@ -53,6 +56,7 @@ class _MovieInfoPageState extends State<MovieInfoPage> {
   }
 
   _getCastList() {
+    //获取演员
     return List<Widget>.generate(info.casts.length, (index) {
       CastsBean castsBean = info.casts[index];
       return Expanded(
@@ -224,6 +228,16 @@ class _MovieInfoPageState extends State<MovieInfoPage> {
           ];
   }
 
+  _getLoading() {
+    if (isSuccess) {
+      return LoadingProgress();
+    } else {
+      return LoadingError(
+        voidCallback: _loadData,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -231,7 +245,7 @@ class _MovieInfoPageState extends State<MovieInfoPage> {
         title: Text(widget.movie.title),
         actions: _getActions(),
       ),
-      body: info == null ? _showProgress() : _getBody(),
+      body: info == null ? _getLoading() : _getBody(),
     );
   }
 }

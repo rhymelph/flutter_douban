@@ -23,7 +23,7 @@ class MoviePage extends StatefulWidget {
 class _MoviePageState extends State<MoviePage> {
   bool isSuccess = true;
 
-  loadData() async {
+  _loadData() async {
     String url = 'https://api.douban.com${widget.dataPath}';
     print(url);
     HttpManager.get(
@@ -35,7 +35,7 @@ class _MoviePageState extends State<MoviePage> {
         },
         onSuccess: (String body) {
           setState(() {
-            widget.isLoad = true;//加载成功后，将已加载状态设置为true
+            widget.isLoad = true; //加载成功后，将已加载状态设置为true
             widget.movieList = Movie.movieList(json.decode(body));
           });
         },
@@ -53,7 +53,7 @@ class _MoviePageState extends State<MoviePage> {
       return LoadingProgress();
     } else {
       return LoadingError(
-        voidCallback: loadData,
+        voidCallback: _loadData,
       );
     }
   }
@@ -76,7 +76,7 @@ class _MoviePageState extends State<MoviePage> {
   //刷新按钮
   Future<Null> _onRefresh() async {
     return Future.delayed(Duration(milliseconds: 1000), () {
-      loadData();
+      _loadData();
     });
   }
 
@@ -85,12 +85,12 @@ class _MoviePageState extends State<MoviePage> {
     // TODO: implement initState
     super.initState();
     if (!widget.isLoad) {
-      loadData();
+      _loadData();
     }
   }
 
   //save the listView offset
-  void _initController() {
+  _initController() {
     widget.controller = ScrollController(initialScrollOffset: widget.offset);
     widget.controller.addListener(() {
       widget.offset = widget.controller.offset;

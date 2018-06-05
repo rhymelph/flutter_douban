@@ -3,7 +3,7 @@ import 'package:html/dom.dart';
 
 import 'package:html/parser.dart';
 
-class BookInfo {
+class BookEntity {
   final String author; //作者
   final String publish; //出版社
   final String origin_title; //原名
@@ -23,13 +23,13 @@ class BookInfo {
   final String subject; //丛书信息
   final List<Comment> commentList;
 
-  BookInfo(this.author, this.publish, this.origin_title, this.author_des,
+  BookEntity(this.author, this.publish, this.origin_title, this.author_des,
       this.publish_year, this.page_count, this.price, this.Binding, this.series,
       this.ISBM, this.ratingValue, this.ratingCount, this.intro_content,
       this.intro_author, this.indent, this.tags, this.subject,
       this.commentList);
 
-  factory BookInfo.forHtml(String htmlDoc){
+  factory BookEntity.forHtml(String htmlDoc){
     Document doc = parse(htmlDoc);
     Element body = doc.body;
     var info = body
@@ -94,7 +94,7 @@ class BookInfo {
     });
     indent= related_info.getElementsByClassName('indent').last.text.replaceAll(' ',"").replaceAll('\"', '');
     
-    return new BookInfo(
+    return new BookEntity(
         author,
         publish,
         originTitle,

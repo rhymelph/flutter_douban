@@ -171,7 +171,6 @@ class LoadingError extends StatelessWidget{
     // TODO: implement build
     return  Center(
       child:  RaisedButton(
-        color: Colors.transparent,
           textColor: Colors.green,
           child:  Text('加载失败，点击重新加载'),
           onPressed: voidCallback),

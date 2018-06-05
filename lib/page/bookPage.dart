@@ -33,33 +33,34 @@ class _BookPageState extends State<BookPage> {
   void initState() {
     super.initState();
     if (!widget.isLoad) {
-      loadData();
+      _loadData();
     }
   }
 
-  loadData() async {
+  _loadData() async {
     String url = 'https://book.douban.com/';
     print(url);
     HttpManager.get(
-        url: url,
-        onError: (Object e) {
-          setState(() {
-            widget.bookTitleList = null;
-            isSuccess = false;
-          });
-        },
-        onSuccess: (String body) {
-          List<BookTitleList> temp = BookTitleList.getFromHtml(body);
-          setState(() {
-            widget.isLoad = true;
-            widget.bookTitleList = temp;
-          });
-        },
-        onSend: () {
-          setState(() {
-            isSuccess = true;
-          });
+      url: url,
+      onSend: () {
+        setState(() {
+          isSuccess = true;
         });
+      },
+      onSuccess: (String body) {
+        List<BookTitleList> temp = BookTitleList.getFromHtml(body);
+        setState(() {
+          widget.isLoad = true;
+          widget.bookTitleList = temp;
+        });
+      },
+      onError: (Object e) {
+        setState(() {
+          widget.bookTitleList = null;
+          isSuccess = false;
+        });
+      },
+    );
   }
 
   _getLoading() {
@@ -67,30 +68,42 @@ class _BookPageState extends State<BookPage> {
       return LoadingProgress();
     } else {
       return LoadingError(
-        voidCallback: loadData,
+        voidCallback: _loadData,
       );
     }
   }
 
   _getBody() {
     _initController();
-
     List<Widget> bookList = [];
     widget.bookTitleList.forEach((list) {
-      bookList
-          .add(SliverPersistentHeader(delegate: BookTitle(title: list.title)));
+      bookList.add(
+        SliverPersistentHeader(
+          delegate: BookTitle(
+            title: list.title,
+          ),
+        ),
+      );
       bookList.add(SliverGrid(
-          delegate: SliverChildBuilderDelegate((BuildContext context, index) {
-            return BookItem(
-              book: list.bookList[index],
-            );
-          }, childCount: list.bookList.length),
+          delegate: SliverChildBuilderDelegate(
+            (
+              BuildContext context,
+              index,
+            ) {
+              return BookItem(
+                book: list.bookList[index],
+              );
+            },
+            childCount: list.bookList.length,
+          ),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 5.0,
-              mainAxisSpacing: 5.0,
-              childAspectRatio: 0.7)));
+            crossAxisCount: 2,
+            crossAxisSpacing: 5.0,
+            mainAxisSpacing: 5.0,
+            childAspectRatio: 0.7,
+          )));
     });
+
     return CustomScrollView(
       controller: widget.controller,
       slivers: bookList,
@@ -184,13 +197,14 @@ class BookItem extends StatelessWidget {
               );
             },
             opaque: false,
-            transitionDuration: new Duration(milliseconds: 200) ,
+            transitionDuration: new Duration(milliseconds: 200),
             transitionsBuilder:
                 (___, Animation<double> animation, ____, Widget child) {
               return new FadeTransition(
                 opacity: animation,
                 child: new ScaleTransition(
-                  scale: new Tween<double>(begin: 0.5,end: 1.0).animate(animation),
+                  scale: new Tween<double>(begin: 0.5, end: 1.0)
+                      .animate(animation),
 //                  position: new Tween<Offset>(begin: const Offset(-1.0, 0.0),end: Offset.zero)
 //                      .animate(animation),
                   child: child,

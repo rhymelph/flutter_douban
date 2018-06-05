@@ -59,10 +59,13 @@ class _HomePageState extends State<HomePage> {
           bottom: index == 0 ? _movieTab() : null,
         ),
         body: _getBody(),
-        drawer: Drawer(
-          elevation: 8.0,
-          semanticLabel: '滑动抽屉',
-          child: DrawerLayout(),
+        drawer:  DrawerController(
+          alignment: DrawerAlignment.start,
+          child: Drawer(
+            elevation: 8.0,
+            semanticLabel: '滑动抽屉',
+            child: DrawerLayout(),
+          ),
         ),
         bottomNavigationBar: _getBottomNavigationBar(),
       ),
@@ -136,13 +139,13 @@ class _HomePageState extends State<HomePage> {
           switch (index) {
             case 0:
               return BottomNavigationBarItem(
-                  icon: Icon(Icons.movie), title: Text('电影'));
+                  icon: this.index==0?Icon(Icons.movie_filter):Icon(Icons.movie), title: Text('电影'));
             case 1:
               return BottomNavigationBarItem(
-                  icon: Icon(Icons.book), title: Text('图书'));
+                  icon: this.index==1?Icon(Icons.book):Icon(Icons.bookmark), title: Text('图书'));
             case 2:
               return BottomNavigationBarItem(
-                  icon: Icon(Icons.music_note), title: Text('音乐'));
+                  icon: this.index==2?Icon(Icons.music_video):Icon(Icons.music_note), title: Text('音乐'));
           }
         }));
   }
