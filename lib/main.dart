@@ -59,13 +59,10 @@ class _HomePageState extends State<HomePage> {
           bottom: index == 0 ? _movieTab() : null,
         ),
         body: _getBody(),
-        drawer:  DrawerController(
-          alignment: DrawerAlignment.start,
-          child: Drawer(
-            elevation: 8.0,
-            semanticLabel: '滑动抽屉',
-            child: DrawerLayout(),
-          ),
+        drawer:  Drawer(
+          elevation: 8.0,
+          semanticLabel: '滑动抽屉',
+          child: DrawerLayout(),
         ),
         bottomNavigationBar: _getBottomNavigationBar(),
       ),

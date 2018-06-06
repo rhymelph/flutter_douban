@@ -1,6 +1,5 @@
 import 'package:html/dom.dart';
 
-
 import 'package:html/parser.dart';
 
 class BookEntity {
@@ -23,19 +22,31 @@ class BookEntity {
   final String subject; //丛书信息
   final List<Comment> commentList;
 
-  BookEntity(this.author, this.publish, this.origin_title, this.author_des,
-      this.publish_year, this.page_count, this.price, this.Binding, this.series,
-      this.ISBM, this.ratingValue, this.ratingCount, this.intro_content,
-      this.intro_author, this.indent, this.tags, this.subject,
+  BookEntity(
+      this.author,
+      this.publish,
+      this.origin_title,
+      this.author_des,
+      this.publish_year,
+      this.page_count,
+      this.price,
+      this.Binding,
+      this.series,
+      this.ISBM,
+      this.ratingValue,
+      this.ratingCount,
+      this.intro_content,
+      this.intro_author,
+      this.indent,
+      this.tags,
+      this.subject,
       this.commentList);
 
-  factory BookEntity.forHtml(String htmlDoc){
+  factory BookEntity.forHtml(String htmlDoc) {
     Document doc = parse(htmlDoc);
     Element body = doc.body;
-    var info = body
-        .getElementsByClassName("subject")
-        .first
-        .getElementsByClassName("p1");
+    var a = body.getElementsByClassName('subject');
+    var b = a.first.text.replaceAll(' ', '').split("\n\n\n\n");
     String author;
     String publish;
     String originTitle;
@@ -45,55 +56,74 @@ class BookEntity {
     String price;
     String Binding;
     String series;
-    String ISBM;
-    String intro_content;
-    String intro_author;
+    String ISBN;
+    String intro_content='';
+    String intro_author='';
     String indent;
-
-    for (int i = 0; i < info.length; i++) {
-      var e = info[i];
-      String text = e.text.replaceAll(' ', '');
-      if (text.contains("作者")) {
-        author = e.text;
-      } else if (text.contains("出版社")) {
-        publish = text;
-      } else if (text.contains('原作名')) {
-        originTitle = text;
-      } else if (text.contains('出版年:')) {
-        publishYear = text;
-      } else if (text.contains('译者')) {
-        authorDes = text;
-      } else if (text.contains('页数')) {
-        page_count = text;
-      } else if (text.contains('定价')) {
-        price = text;
-      } else if (text.contains('装帧')) {
-        Binding = text;
-      } else if (text.contains('丛书')) {
-        series = text;
-      } else if (text.contains('ISBN')) {
-        ISBM = text;
+    for(String text in b){
+      if(text.isNotEmpty){
+        String item=text.replaceAll("\n", '');
+        if(text.contains("作者")){
+          author=item;
+        }else if(text.contains("出版社")){
+          publish=item;
+        }else if(text.contains("原作名")){
+          originTitle=item;
+        }else if(text.contains("译者")){
+          authorDes=item;
+        }else if(text.contains("出版年")){
+          publishYear=item;
+        }else if(text.contains("页数")){
+          page_count=item;
+        }else if(text.contains("定价")){
+          price=item;
+        }else if(text.contains("装帧")){
+          Binding=item;
+        }else if(text.contains("丛书")){
+          series=item;
+        }else if(text.contains("ISBN")){
+          ISBN=item;
+        }
       }
     }
-    Element ratingSelf=body.getElementsByClassName('rating_self').first;
-    String ratingNum=ratingSelf.getElementsByClassName('rating_num').first.text.replaceAll(' ', '');
-    String number=ratingSelf.getElementsByClassName('rating_people').first.getElementsByTagName('span').first.text;
+    Element ratingSelf = body.getElementsByClassName('rating_self').first;
+    String ratingNum = ratingSelf
+        .getElementsByClassName('rating_num')
+        .first
+        .text
+        .replaceAll(' ', '');
+    String number;
+    if(ratingSelf.getElementsByClassName('rating_people')!=null){
+      number = ratingSelf
+          .getElementsByClassName('rating_people')
+          .first
+          .getElementsByTagName('span')
+          .first
+          .text;
+    }
 
-    Element related_info=body.getElementsByClassName('related_info').first;
-    var intro =related_info.getElementsByClassName('intro');
-    intro.forEach((e){
-      if(intro_content==null){
-        e.getElementsByTagName('p').forEach((p){
-          intro_content +=p.text+'\n';
-        });
-      }else if(intro_author==null){
-        e.getElementsByTagName('p').forEach((p){
-          intro_author +=p.text+'\n';
-        });
+    Element related_info = body.getElementsByClassName('related_info').first;
+    var intro = related_info.getElementsByClassName('intro');
+    intro.forEach((e) {
+      if (intro_content == null) {
+        List<Element> list=e.getElementsByTagName('p');
+        for(Element p in list){
+          intro_content ='${p.text}\n';
+        }
+      } else if (intro_author == null) {
+        List<Element> list=e.getElementsByTagName('p');
+        for(Element p in list){
+          intro_author += '${p.text}\n';
+        }
       }
     });
-    indent= related_info.getElementsByClassName('indent').last.text.replaceAll(' ',"").replaceAll('\"', '');
-    
+    indent = related_info
+        .getElementsByClassName('indent')
+        .last
+        .text
+        .replaceAll(' ', "")
+        .replaceAll('\"', '');
+
     return new BookEntity(
         author,
         publish,
@@ -104,7 +134,7 @@ class BookEntity {
         price,
         Binding,
         series,
-        ISBM,
+        ISBN,
         ratingNum,
         number,
         intro_content,
