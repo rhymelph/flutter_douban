@@ -93,7 +93,9 @@ class BookEntity {
         .text
         .replaceAll(' ', '');
     String number;
-    if(ratingSelf.getElementsByClassName('rating_people')!=null){
+    List<Element> rating_people=ratingSelf.getElementsByClassName('rating_people');
+
+    if(rating_people!=null&&rating_people.length>0){
       number = ratingSelf
           .getElementsByClassName('rating_people')
           .first
@@ -102,27 +104,84 @@ class BookEntity {
           .text;
     }
 
-    Element related_info = body.getElementsByClassName('related_info').first;
-    var intro = related_info.getElementsByClassName('intro');
+    Element relatedInfo = body.getElementsByClassName('related_info').first;
+    var intro = relatedInfo.getElementsByClassName('intro');
     intro.forEach((e) {
-      if (intro_content == null) {
+      if (intro_content == '') {
         List<Element> list=e.getElementsByTagName('p');
         for(Element p in list){
-          intro_content ='${p.text}\n';
+          intro_content += '${p.text}\n';
         }
-      } else if (intro_author == null) {
+      } else if (intro_author == '') {
         List<Element> list=e.getElementsByTagName('p');
         for(Element p in list){
           intro_author += '${p.text}\n';
         }
       }
     });
-    indent = related_info
+    indent = relatedInfo
         .getElementsByClassName('indent')
-        .last
+        .elementAt(3)
         .text
         .replaceAll(' ', "")
         .replaceAll('\"', '');
+
+
+    List<Element> tagsDoc=body.getElementsByClassName('tag');
+    List<String> tags=new List.generate(tagsDoc.length, (index){
+      return tagsDoc[index].text;
+    });
+
+    //
+    Element subjectShow=body.getElementsByClassName('subject_show').first;
+    Element divSubject=subjectShow.getElementsByTagName('div').first;
+    String subject=divSubject.text;
+
+    //获取书评
+    List<Comment> commentList;
+
+    if(body.getElementsByClassName('review-list')!=null&&body.getElementsByClassName('review-list').length>0){
+      Element reviewList = body.getElementsByClassName('review-list').first;
+      List<Element> reviewItem=reviewList.getElementsByClassName('review-item');
+      commentList=new List.generate(reviewItem.length, (index){
+        Element mainHd=reviewItem[index].getElementsByClassName('main-hd').first;
+        Element avator=mainHd.getElementsByClassName('avator').first.getElementsByTagName('img').first;
+        var attributes = avator.attributes;
+        String avatorImg;
+        attributes.forEach((k,v){
+          if(k.toString()=='src'){
+            avatorImg=v;
+          }
+        });
+        String name=mainHd.getElementsByClassName('name').first.text;
+        Element mainTitleRating=mainHd.getElementsByClassName('main-title-rating').first;
+        String ratingsValue;
+        String ratingsDes;
+        mainTitleRating.attributes.forEach((k,v){
+          if(k.toString()=='class'){
+            ratingsValue=v.substring(v.indexOf('allstar')+7,v.indexOf('allstar')+9);
+          }else if(k.toString()=='title'){
+            ratingsDes=v;
+          }
+        });
+        String time=mainHd.getElementsByClassName('main-meta').first.text;
+
+        Element mainBd=reviewItem[index].getElementsByClassName('main-bd').first;
+
+        Element titleDoc=mainBd.getElementsByTagName('a').first;
+
+        String title=titleDoc.text;
+
+        String address;
+        titleDoc.attributes.forEach((k,v){
+          if(k.toString()=='href'){
+            address=v;
+          }
+        });
+        String shortContent= mainBd.getElementsByClassName('short-content').first.text;
+        return Comment(avatorImg,name,ratingsValue,ratingsDes,time,title,address,shortContent);
+      });
+    }
 
     return new BookEntity(
         author,
@@ -140,18 +199,21 @@ class BookEntity {
         intro_content,
         intro_author,
         indent,
-        null,
-        null,
-        null);
+        tags,
+        subject,
+        commentList);
   }
 }
 
 class Comment {
+  final String avator;
   final String name;
   final String address;
   final String title;
   final String time;
   final String ratingsValue;
+  final String ratingDes;
+  final String shortContent;
 
-  Comment(this.name, this.address, this.title, this.time, this.ratingsValue);
+  Comment(this.avator,this.name, this.ratingsValue,this.ratingDes, this.time, this.title, this.address,this.shortContent);
 }
