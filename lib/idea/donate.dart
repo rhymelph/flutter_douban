@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart' hide Flow;
 import 'package:flutter_douban/utils/Utils.dart';
+import 'package:flutter_douban/value.dart';
 class DonateListTile extends StatelessWidget {
   const DonateListTile({
     Key key,
@@ -83,7 +84,7 @@ class DonateDialog extends StatelessWidget {
           child: new ListBody(children: body),
         ),
         actions: <Widget>[
-          new DonateFlatButton(ercode: 'FKX05369RYXWBANXWYFR43',text: '好主意',),
-        ]);
+          new DonateFlatButton(ercode: Value.supportErCode,text: Value.supportTipCommit,),],);
+
   }
 }

@@ -16,6 +16,7 @@ class BookEntity {
   final String ratingValue; //评分
   final String ratingCount; //评价
   final String intro_content; //内容简介
+  final String read_address;
   final String intro_author; //作者简介
   final String indent; //目录
   final List<String> tags; //标签
@@ -36,6 +37,7 @@ class BookEntity {
       this.ratingValue,
       this.ratingCount,
       this.intro_content,
+      this.read_address,
       this.intro_author,
       this.indent,
       this.tags,
@@ -106,26 +108,44 @@ class BookEntity {
 
     Element relatedInfo = body.getElementsByClassName('related_info').first;
     var intro = relatedInfo.getElementsByClassName('intro');
-    intro.forEach((e) {
-      if (intro_content == '') {
-        List<Element> list=e.getElementsByTagName('p');
-        for(Element p in list){
-          intro_content += '${p.text}\n';
-        }
-      } else if (intro_author == '') {
-        List<Element> list=e.getElementsByTagName('p');
-        for(Element p in list){
-          intro_author += '${p.text}\n';
-        }
+    if(intro.first!=null){
+      List<Element> list=intro.first.getElementsByTagName('p');
+      for(Element p in list){
+        intro_content += '${p.text}\n';
       }
-    });
+    }
+    if(intro.last!=null){
+      List<Element> list=intro.last.getElementsByTagName('p');
+      for(Element p in list){
+        intro_author += '${p.text}\n';
+      }
+    }
+    intro_content=intro_content.replaceAll('(展开全部)', '');
+
+    String read_address;
+
+    var onlineRead=body.getElementsByClassName('online-read');
+    if(onlineRead!=null&&onlineRead.length>0){
+      var a=onlineRead.first.getElementsByTagName('a');
+      if(a!=null&&a.length>0){
+        a.first.attributes.forEach((k,v){
+          if(k=='href'){
+            read_address=v;
+
+          }
+        });
+      }
+    }
     indent = relatedInfo
         .getElementsByClassName('indent')
         .elementAt(3)
         .text
         .replaceAll(' ', "")
         .replaceAll('\"', '');
-
+    if(indent.contains('还没人写过短评呢')||(indent.contains('-')&&indent.contains('有用'))){
+      indent='暂时没有目录';
+    }
+    indent=indent.replaceAll('(收起)', '');
 
     List<Element> tagsDoc=body.getElementsByClassName('tag');
     List<String> tags=new List.generate(tagsDoc.length, (index){
@@ -179,7 +199,7 @@ class BookEntity {
           }
         });
         String shortContent= mainBd.getElementsByClassName('short-content').first.text;
-        return Comment(avatorImg,name,ratingsValue,ratingsDes,time,title,address,shortContent);
+        return Comment(avatorImg,name,ratingsValue,ratingsDes,time,title.replaceAll('\n', '').replaceAll(' ', ''),address,shortContent.replaceAll('\n', '').replaceAll(' ', '').replaceAll('(展开)', ''));
       });
     }
 
@@ -197,6 +217,7 @@ class BookEntity {
         ratingNum,
         number,
         intro_content,
+        read_address,
         intro_author,
         indent,
         tags,

@@ -2,27 +2,27 @@
 
 一款基于豆瓣api2.0的小demo(更多详情请登陆[官网](https://www.douban.com) )
 
-## 获取demo1.2版本(目前只支持安卓的demo)
+## 获取demo1.3版本(目前只支持安卓的demo)
 
-[点击我下载](https://github.com/rhylme/flutter_douban/blob/master/apk/app.apk?raw=true)
+[点击我下载](https://github.com/rhylme/flutter_douban/blob/master/apk/app1.3.apk?raw=true)
 
 ## 持续更新
 
 > 欢迎star
-## 1.0版本
 
- <img src="/gif/index.gif" width="240px" height="426px"/>
+## 1.3版本
 
-## 1.1版本
+> 1. 记录图书列表的滚动位置
 
-> 1. Android版添加分享功能,现在可以在电影详情里点击分享
+> 2. 添加图书详情
 
-> 2. 添加TabBar,现在可以获取正在热播,即将上映,Top250的电影
+> 3. 添加图书评论页面显示
 
-> 3. 上一张图
+> 4. 优化代码(String统一处理,http统一处理)
 
- <img src="/gif/index1.1.gif" width="240px" height="426px"/>
+> 5. 添加加载失败重新加载提示
 
+<img src="/gif/index1.3.gif" width="240px" height="426px"/>
 
 ## 1.2版本
 
@@ -37,3 +37,22 @@
 > 5. 例行上图
 
 <img src="/gif/index1.2.gif" width="240px" height="426px"/>
+
+## 1.1版本
+
+> 1. Android版添加分享功能,现在可以在电影详情里点击分享
+
+> 2. 添加TabBar,现在可以获取正在热播,即将上映,Top250的电影
+
+> 3. 上一张图
+
+ <img src="/gif/index1.1.gif" width="240px" height="426px"/>
+
+## 1.0版本
+
+ <img src="/gif/index.gif" width="240px" height="426px"/>
+
+
+
+
+

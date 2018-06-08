@@ -4,6 +4,7 @@ import 'package:flutter_douban/page/bookPage.dart';
 import 'package:flutter_douban/page/moviePage.dart';
 import 'package:flutter_douban/idea/donate.dart';
 import 'package:flutter_douban/utils/Utils.dart';
+import 'value.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'DouBan Power By Flutter',
+      title: Value.appName,
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
@@ -41,9 +42,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   final List<MovieTab> movieTabs = <MovieTab>[
-    MovieTab(Icons.whatshot, '正在热播', '/v2/movie/in_theaters'),
-    MovieTab(Icons.compare, '即将上映', '/v2/movie/coming_soon'),
-    MovieTab(Icons.vertical_align_top, 'Top250', '/v2/movie/top250'),
+    MovieTab(Icons.whatshot, Value.justHot, Value.justHotPath),
+    MovieTab(Icons.compare, Value.willUp, Value.willUpPath),
+    MovieTab(Icons.vertical_align_top, Value.top250, Value.top250Path),
   ];
   var moviePage; // a movie page
 
@@ -59,9 +60,9 @@ class _HomePageState extends State<HomePage> {
           bottom: index == 0 ? _movieTab() : null,
         ),
         body: _getBody(),
-        drawer:  Drawer(
+        drawer: Drawer(
           elevation: 8.0,
-          semanticLabel: '滑动抽屉',
+          semanticLabel: Value.drawerLabel,
           child: DrawerLayout(),
         ),
         bottomNavigationBar: _getBottomNavigationBar(),
@@ -72,11 +73,11 @@ class _HomePageState extends State<HomePage> {
   _getTitle() {
     switch (index) {
       case 0:
-        return _forMatchTitle('电影');
+        return _forMatchTitle(Value.movie);
       case 1:
-        return _forMatchTitle('图书');
+        return _forMatchTitle(Value.book);
       case 2:
-        return _forMatchTitle('音乐');
+        return _forMatchTitle(Value.music);
     }
   }
 
@@ -115,13 +116,13 @@ class _HomePageState extends State<HomePage> {
         return moviePage;
       case 1:
         if (bookPage == null) {
-          double offset=0.0;
+          double offset = 0.0;
           bookPage = BookPage(offset);
         }
         return bookPage;
       case 2:
         return Center(
-          child: Text('音乐'),
+          child: Text(Value.music),
         );
     }
   }
@@ -136,13 +137,21 @@ class _HomePageState extends State<HomePage> {
           switch (index) {
             case 0:
               return BottomNavigationBarItem(
-                  icon: this.index==0?Icon(Icons.movie_filter):Icon(Icons.movie), title: Text('电影'));
+                  icon: this.index == 0
+                      ? Icon(Icons.movie_filter)
+                      : Icon(Icons.movie),
+                  title: Text(Value.movie));
             case 1:
               return BottomNavigationBarItem(
-                  icon: this.index==1?Icon(Icons.book):Icon(Icons.bookmark), title: Text('图书'));
+                  icon:
+                      this.index == 1 ? Icon(Icons.book) : Icon(Icons.bookmark),
+                  title: Text(Value.book));
             case 2:
               return BottomNavigationBarItem(
-                  icon: this.index==2?Icon(Icons.music_video):Icon(Icons.music_note), title: Text('音乐'));
+                  icon: this.index == 2
+                      ? Icon(Icons.music_video)
+                      : Icon(Icons.music_note),
+                  title: Text(Value.music));
           }
         }));
   }
@@ -174,9 +183,9 @@ class DrawerLayout extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   CircleAvatar(
-                    child: Text('R'),
+                    child: Text(Value.author[0]),
                   ),
-                  Text('Rhyme', style: Theme.of(context).textTheme.title),
+                  Text(Value.author, style: Theme.of(context).textTheme.title),
                 ],
               ),
             ),
@@ -186,12 +195,12 @@ class DrawerLayout extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                QQCallText(qqNumber: '708959817'),
+                QQCallText(qqNumber: Value.QQ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4.0),
                   child: EmailText(
-                    email: 'rhymelph@qq.com',
-                    title: '关于flutter_douban应用的一些建议',
+                    email: Value.eMail,
+                    title: Value.eMailContent,
                   ),
                 ),
               ],
@@ -205,19 +214,19 @@ class DrawerLayout extends StatelessWidget {
   _getDonateItem() {
     return DonateListTile(
       icon: Icon(Icons.supervisor_account),
-      child: Text('支持'),
-      authorDes: '给作者买颗七彩棒棒糖怎么样?',
-      title: '支持一下',
+      child: Text(Value.support),
+      authorDes: Value.supportTip,
+      title: Value.supportTitle,
     );
   }
 
   _getAboutItem() {
     return AboutListTile(
       icon: Icon(Icons.person),
-      child: Text('关于'),
-      applicationLegalese: '一个关于豆瓣内容的demo,本项目用于学习研究,如用于商业用途,后果自负',
-      applicationName: '豆瓣Flutter版',
-      applicationVersion: 'version:1.2',
+      child: Text(Value.about),
+      applicationLegalese: Value.aboutDes,
+      applicationName: Value.appName,
+      applicationVersion: 'version:${Value.appVersion}',
     );
   }
 }
