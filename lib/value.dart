@@ -21,15 +21,23 @@ class Value{
   static const String supportTitle='支持一下';
   static const String about='关于';
   static const String aboutDes='一个关于豆瓣内容的demo,本项目用于学习研究,如用于商业用途,后果自负！';
+
   static const String movie='电影';
-  static const String music='音乐';
-  static const String book='图书';
+  static const String apiPath='https://api.douban.com';
+  static const String moviePath='https://api.douban.com/v2/movie/subject/';
   static const String justHot='正在热播';
   static const String justHotPath='/v2/movie/in_theaters';
   static const String top250='Top250';
   static const String top250Path='/v2/movie/top250';
   static const String willUp='即将上映';
   static const String willUpPath='/v2/movie/coming_soon';
+
+  static const String book='图书';
+  static const String bookRootPath='https://book.douban.com/';
+
+  static const String music='音乐';
+  static const String musicPath='https://music.douban.com';
+
   static const String drawerLabel='滑动抽屉';
   static const String loadingErrorTip='加载失败，点击重新加载';
   static const String sure='确定';

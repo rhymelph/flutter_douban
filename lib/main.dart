@@ -4,6 +4,7 @@ import 'package:flutter_douban/page/bookPage.dart';
 import 'package:flutter_douban/page/moviePage.dart';
 import 'package:flutter_douban/idea/donate.dart';
 import 'package:flutter_douban/utils/Utils.dart';
+import 'package:flutter_douban/page/musicPage.dart';
 import 'value.dart';
 
 void main() => runApp(MyApp());
@@ -48,7 +49,9 @@ class _HomePageState extends State<HomePage> {
   ];
   var moviePage; // a movie page
 
-  var bookPage; // a book age
+  var bookPage; // a book page
+
+  var musicPage; // a music page
 
   @override
   Widget build(BuildContext context) {
@@ -121,9 +124,11 @@ class _HomePageState extends State<HomePage> {
         }
         return bookPage;
       case 2:
-        return Center(
-          child: Text(Value.music),
-        );
+        if (musicPage == null) {
+          double offset = 0.0; //save the offset from scrollView
+          musicPage = MusicPage(offset);
+        }
+        return musicPage;
     }
   }
 

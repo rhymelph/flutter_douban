@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:flutter_douban/utils/Utils.dart';
 import 'package:flutter_douban/info/movie_info.dart';
+import 'package:flutter_douban/value.dart';
 
 class MoviePage extends StatefulWidget {
   MoviePage(this.dataPath, this.offset);
@@ -24,10 +25,8 @@ class _MoviePageState extends State<MoviePage> {
   bool isSuccess = true;
 
   _loadData() async {
-    String url = 'https://api.douban.com${widget.dataPath}';
-    print(url);
     HttpManager.get(
-        url: url,
+        url: '${Value.apiPath}${widget.dataPath}',
         onSend: () {
           setState(() {
             isSuccess = true;

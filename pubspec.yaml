@@ -4,6 +4,7 @@ description: A new Flutter about to douban.
 dependencies:
   url_launcher: "^3.0.1"
   html: "^0.13.3"
+  share: "0.5.1"
   flutter:
     sdk: flutter
   # The following adds the Cupertino Icons font to your application.
@@ -26,11 +27,10 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-#  fonts:
-#    - family: XiManTi
-#      fonts:
-#        - asset: fonts/ximanti.ttf
-#          style: ximanti
+  fonts:
+    - family: Merri
+      fonts:
+        - asset: fonts/MerriweatherBlack.ttf
   # To add assets to your application, add an assets section, like this:
 #   assets:
 #    - images/a_dot_burr.jpeg

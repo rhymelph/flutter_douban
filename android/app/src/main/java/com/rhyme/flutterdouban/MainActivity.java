@@ -28,11 +28,7 @@ public class MainActivity extends FlutterActivity {
             new MethodChannel.MethodCallHandler() {
                 @Override
                 public void onMethodCall(MethodCall methodCall, MethodChannel.Result result) {
-                    if (methodCall.method.equals("ShareToThis")){
-                        ArrayList info=methodCall.arguments();
-                        boolean isSuccess=shareText(info.get(0),info.get(0),info.get(0)+"\n介绍:\n"+info.get(2)+"\n详情请看:\n"+info.get(1)+"\n来自flutter_douban应用");
-                        result.success(isSuccess);
-                    }else if (methodCall.method.equals("DonateToMe")){
+                    if (methodCall.method.equals("DonateToMe")){
                         ArrayList info=methodCall.arguments();
                         boolean isSuccess= PayAlipay(MainActivity.this,INTENT_URL_FORMAT.replace("{payCode}",String.valueOf(info.get(0))));
                         result.success(isSuccess);
@@ -44,24 +40,23 @@ public class MainActivity extends FlutterActivity {
                 }
             });
   }
-
-  private boolean shareText(Object title, Object theme, String content){
-    if (content==null||"".equals(content)){
-      return false;
-    }
-    Intent intent=new Intent(Intent.ACTION_SEND);
-    intent.setType("text/plain");
-    if (theme==null||"".equals(theme)){
-     intent.putExtra(Intent.EXTRA_SUBJECT,String.valueOf(theme));
-    }
-    intent.putExtra(Intent.EXTRA_TEXT,content);
-    if (title==null||"".equals(title)){
-      startActivity(Intent.createChooser(intent,String.valueOf(title)));
-    }else {
-      startActivity(intent);
-    }
-    return true;
-  }
+//  private boolean shareText(Object title, Object theme, String content){
+//    if (content==null||"".equals(content)){
+//      return false;
+//    }
+//    Intent intent=new Intent(Intent.ACTION_SEND);
+//    intent.setType("text/plain");
+//    if (theme==null||"".equals(theme)){
+//     intent.putExtra(Intent.EXTRA_SUBJECT,String.valueOf(theme));
+//    }
+//    intent.putExtra(Intent.EXTRA_TEXT,content);
+//    if (title==null||"".equals(title)){
+//      startActivity(Intent.createChooser(intent,String.valueOf(title)));
+//    }else {
+//      startActivity(intent);
+//    }
+//    return true;
+//  }
     private static final String INTENT_URL_FORMAT = "intent://platformapi/startapp?saId=10000007&" +
             "clientVersion=3.7.0.0718&qrcode=https%3A%2F%2Fqr.alipay.com%2F{payCode}%3F_s" +
             "%3Dweb-other&_t=1472443966571#Intent;" +

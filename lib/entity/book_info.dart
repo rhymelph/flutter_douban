@@ -128,12 +128,7 @@ class BookEntity {
     if(onlineRead!=null&&onlineRead.length>0){
       var a=onlineRead.first.getElementsByTagName('a');
       if(a!=null&&a.length>0){
-        a.first.attributes.forEach((k,v){
-          if(k=='href'){
-            read_address=v;
-
-          }
-        });
+        read_address=a.first.attributes['href'];
       }
     }
     indent = relatedInfo
@@ -168,22 +163,14 @@ class BookEntity {
         Element avator=mainHd.getElementsByClassName('avator').first.getElementsByTagName('img').first;
         var attributes = avator.attributes;
         String avatorImg;
-        attributes.forEach((k,v){
-          if(k.toString()=='src'){
-            avatorImg=v;
-          }
-        });
+        avatorImg=attributes['src'];
+
         String name=mainHd.getElementsByClassName('name').first.text;
         Element mainTitleRating=mainHd.getElementsByClassName('main-title-rating').first;
-        String ratingsValue;
-        String ratingsDes;
-        mainTitleRating.attributes.forEach((k,v){
-          if(k.toString()=='class'){
-            ratingsValue=v.substring(v.indexOf('allstar')+7,v.indexOf('allstar')+9);
-          }else if(k.toString()=='title'){
-            ratingsDes=v;
-          }
-        });
+        String ratingsValue=mainTitleRating.attributes['class'];
+        ratingsValue=ratingsValue.substring(ratingsValue.indexOf('allstar')+7,ratingsValue.indexOf('allstar')+9);
+        String ratingsDes=mainTitleRating.attributes['title'];
+
         String time=mainHd.getElementsByClassName('main-meta').first.text;
 
         Element mainBd=reviewItem[index].getElementsByClassName('main-bd').first;
@@ -192,12 +179,8 @@ class BookEntity {
 
         String title=titleDoc.text;
 
-        String address;
-        titleDoc.attributes.forEach((k,v){
-          if(k.toString()=='href'){
-            address=v;
-          }
-        });
+        String address=titleDoc.attributes['href'];
+
         String shortContent= mainBd.getElementsByClassName('short-content').first.text;
         return Comment(avatorImg,name,ratingsValue,ratingsDes,time,title.replaceAll('\n', '').replaceAll(' ', ''),address,shortContent.replaceAll('\n', '').replaceAll(' ', '').replaceAll('(展开)', ''));
       });

@@ -4,6 +4,7 @@ import 'package:flutter_douban/http/HttpManagert.dart' as HttpManager;
 import 'dart:convert';
 import 'package:flutter_douban/entity/movie_info.dart';
 import 'package:flutter_douban/utils/Utils.dart';
+import 'package:flutter_douban/value.dart';
 
 class MovieInfoPage extends StatefulWidget {
   MovieInfoPage({this.movie});
@@ -26,7 +27,7 @@ class _MovieInfoPageState extends State<MovieInfoPage> {
   }
 
   _loadData() async {
-    String url = '$movie_page${widget.movie.id}';
+    String url = '${Value.moviePath}${widget.movie.id}';
     print(url);
     HttpManager.get(url: url,
     onSend: (){
@@ -250,4 +251,3 @@ class _MovieInfoPageState extends State<MovieInfoPage> {
   }
 }
 
-const String movie_page = 'https://api.douban.com/v2/movie/subject/';

@@ -3,6 +3,7 @@ import 'package:flutter_douban/entity/book.dart';
 import 'package:flutter_douban/http/HttpManagert.dart' as HttpManager;
 import 'package:flutter_douban/utils/Utils.dart';
 import 'package:flutter_douban/info/book_info.dart';
+import 'package:flutter_douban/value.dart';
 
 class BookPage extends StatefulWidget {
   BookPage(this.offset);
@@ -38,10 +39,9 @@ class _BookPageState extends State<BookPage> {
   }
 
   _loadData() async {
-    String url = 'https://book.douban.com/';
-    print(url);
+
     HttpManager.get(
-      url: url,
+      url: Value.bookRootPath,
       onSend: () {
         setState(() {
           isSuccess = true;

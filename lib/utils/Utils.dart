@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_douban/value.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:share/share.dart';
 
 const utils_platform = const MethodChannel('samples.flutter.io/utils');
 
@@ -14,26 +15,13 @@ class ShareIconButton extends StatelessWidget {
   final String url;
   final String summary;
 
-  _shareAndroid(BuildContext context) async {
-    bool isSuccess =
-        await utils_platform.invokeMethod(Value.shareMethodValue, [title, url, summary]);
-    if (!isSuccess) {
-      _showDialog(context: context, content: Value.shareError);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return IconButton(
         icon: Icon(Icons.share),
-        onPressed: () {
-          if (defaultTargetPlatform == TargetPlatform.iOS) {
-            _showDialog(context: context, content: Value.shareNoSupportIOS);
-          } else {
-            _shareAndroid(context);
-          }
-        });
+        onPressed: () => Share
+            .share("$title\n介绍:\n$summary\n详情请看:\n$url\n来自flutter_douban应用"));
   }
 }
 

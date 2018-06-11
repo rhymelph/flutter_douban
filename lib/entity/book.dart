@@ -17,22 +17,10 @@ class BookTitleList{
     c.forEach((e){
       var f=e.getElementsByTagName('img').first.attributes;
       var g=e.getElementsByTagName('a').first.attributes;
-      String address;
+      String address=g['href'];
+      String imageAddress=f['src'];
+      String name=f['alt'];
 
-      g.forEach((a,b){
-        if(a.toString()=='href'){
-          address=b;
-        }
-      });
-      String imageAddress;
-      String name;
-      f.forEach((a,b){
-        if(a.toString()=='src'){
-          imageAddress=b;
-        }else if(a.toString() =='alt'){
-          name=b;
-        }
-      });
       List<Element> star=e.getElementsByClassName('entry-star-small');
       double starValue=0.0;
       if(star.length!=0){
