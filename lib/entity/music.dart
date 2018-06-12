@@ -6,7 +6,7 @@ import 'package:html/parser.dart';
 class MusicList {
   final List<MusicBanner> bannerList;
   final List<MusicTitle<MusicFashionItem>> fashionList;
-  final List<MusicTitle<MusicEditItem>> editList;
+  final MusicTitle<MusicEditItem> editList;
   final MusicTitle<Music250Item> m250List;
 
   MusicList(this.bannerList, this.fashionList, this.editList, this.m250List);
@@ -76,7 +76,6 @@ class MusicList {
     }
 
     //编辑推荐
-    List<MusicTitle<MusicEditItem>> editList = [];
     var editorFeatured = body.getElementsByClassName('editor-featured');
     List<MusicEditItem> editItemList = [];
     if (editorFeatured.length > 0) {
@@ -102,7 +101,7 @@ class MusicList {
             imageAddress, hoverLaytext, address, name, des, summery));
       });
     }
-    editList.add(MusicTitle<MusicEditItem>('编辑推荐', editItemList));
+    MusicTitle<MusicEditItem> editItem=MusicTitle<MusicEditItem>('编辑推荐', editItemList);
 
     //最新
     List<Music250Item> music250List = [];
@@ -117,7 +116,7 @@ class MusicList {
       music250List.add(Music250Item(title, href, src));
     });
     MusicTitle<Music250Item> m250List = MusicTitle('豆瓣250', music250List);
-    return MusicList(bannerList, fashionList, editList, m250List);
+    return MusicList(bannerList, fashionList, editItem, m250List);
   }
 }
 
@@ -155,7 +154,7 @@ class MusicEditItem {
   final String address; //播放地址
   final String name; //音乐人姓名
   final String des; //编辑推荐
-  final String summery;
+  final String summery;//介绍
 
   MusicEditItem(this.imageAddress, this.hoverLay, this.address, this.name,
       this.des, this.summery); //介绍
