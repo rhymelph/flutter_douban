@@ -3,7 +3,6 @@ import 'package:flutter_douban/http/HttpManagert.dart' as HttpManager;
 import 'package:flutter_douban/value.dart';
 import 'package:flutter_douban/utils/Utils.dart';
 import 'package:flutter_douban/entity/music.dart';
-
 class MusicPage extends StatefulWidget {
   MusicPage(this.offset);
 
@@ -41,6 +40,7 @@ class _MusicPageState extends State<MusicPage> {
         });
   }
 
+  //获取加载中跟加载失败的widget
   _getLoading() {
     if (isSuccess) {
       return LoadingProgress();
@@ -59,6 +59,7 @@ class _MusicPageState extends State<MusicPage> {
     }
   }
 
+  //载入列表滚动控制器
   _initController() {
     widget.controller = ScrollController(initialScrollOffset: widget.offset);
     widget.controller.addListener(() {
@@ -75,6 +76,7 @@ class _MusicPageState extends State<MusicPage> {
   _body() {
     _initController();
     return NestedScrollView(
+      controller: widget.controller,
       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
         return <Widget>[
           SliverOverlapAbsorber(
@@ -91,13 +93,24 @@ class _MusicPageState extends State<MusicPage> {
     );
   }
 
+  _click(String address) async{
+    if (await canLaunch(address)) {
+      await launch(address, forceWebView: true);
+    }
+  }
   //顶部banner
   _getTopWidgets() {
     List<Widget> widgets =
         new List<Widget>.generate(widget.data.bannerList.length, (index) {
-      return new Image.network(
-        widget.data.bannerList[index].imageAddress,
-        fit: BoxFit.cover,
+      return new GestureDetector(
+        onTap: (){
+          _click(widget.data.bannerList[index].address);
+
+        },
+        child: new Image.network(
+          widget.data.bannerList[index].imageAddress,
+          fit: BoxFit.cover,
+        ),
       );
     });
     return SliverPersistentHeader(
@@ -142,7 +155,7 @@ class _MusicPageState extends State<MusicPage> {
         new List.generate(widget.data.m250List.itemList.length, (index) {
       Music250Item music250item = widget.data.m250List.itemList[index];
       return Padding(
-        padding: const EdgeInsets.all(4.0),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -151,12 +164,14 @@ class _MusicPageState extends State<MusicPage> {
                 music250item.imageAddress,
                 width: 70.0,
                 height: 70.0,
+                fit: BoxFit.cover,
               ),
             ),
             Container(
               child: Text(music250item.title),
+              width: 70.0,
               alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
             ),
           ],
         ),
@@ -165,6 +180,7 @@ class _MusicPageState extends State<MusicPage> {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: m250List,
       ),
     );
@@ -175,13 +191,13 @@ class _MusicPageState extends State<MusicPage> {
     List<Widget> editList =
         new List.generate(widget.data.editList.itemList.length, (index) {
       MusicEditItem musicedititem = widget.data.editList.itemList[index];
-      return new Padding(
-        padding: const EdgeInsets.all(4.0),
-        child: new Card(
-          child: new Column(
+      return  Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child:  Card(
+          child:  Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              new Image.network(
+               Image.network(
                 musicedititem.imageAddress,
               ),
               Container(
@@ -190,7 +206,6 @@ class _MusicPageState extends State<MusicPage> {
                   style: Theme.of(context).textTheme.title,
                 ),
                 alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(vertical: 2.0),
               ),
               Container(
                 child: Text(
@@ -213,9 +228,9 @@ class _MusicPageState extends State<MusicPage> {
         ),
       );
     });
-    return new SingleChildScrollView(
+    return  SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: new Row(
+      child:  Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: editList,
       ),
@@ -233,21 +248,21 @@ class _MusicPageState extends State<MusicPage> {
             BuildContext context,
             index,
           ) {
-            return new Card(
+            return  Card(
               child: Container(
                   alignment: Alignment.center,
                   child: Stack(
                     children: <Widget>[
-                      new Image.network(
+                       Image.network(
                         e.itemList[index].imageAddress,
                         fit: BoxFit.cover,
                         height: 200.0,
                         width: 200.0,
                       ),
-                      new Container(
+                       Container(
                         padding: const EdgeInsets.all(8.0),
                         alignment: Alignment.bottomCenter,
-                        child: new Column(
+                        child:  Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
                             Text(
@@ -268,8 +283,8 @@ class _MusicPageState extends State<MusicPage> {
                             ),
                           ],
                         ),
-                        decoration: new BoxDecoration(
-                          gradient: new LinearGradient(
+                        decoration:  BoxDecoration(
+                          gradient:  LinearGradient(
                             begin: Alignment.bottomCenter,
                             end: Alignment.topCenter,
                             colors: [
@@ -357,28 +372,15 @@ class SliverBanner extends SliverPersistentHeaderDelegate {
   SliverBanner({@required this.childs});
 
   final List<Widget> childs;
-  int position = 0;
 
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return new Opacity(
+    return Opacity(
       opacity: (maxExtent - shrinkOffset) / maxExtent,
-      child: PageView.builder(
-        onPageChanged: _setPosition,
-        scrollDirection: Axis.vertical,
-        itemBuilder: (build, index) {
-          return childs[index];
-        },
-        itemCount: childs.length,
-      ),
+      child: ViewPager(children: childs,isShowIndicator: shrinkOffset==0,),
     );
   }
-
-  _setPosition(int index) {
-    position = index;
-  }
-
   @override
   double get maxExtent => 200.0;
 
@@ -391,28 +393,4 @@ class SliverBanner extends SliverPersistentHeaderDelegate {
   }
 }
 
-class Indication extends StatelessWidget {
-  Indication(this.size, this.position);
 
-  final int size;
-  final int position;
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: new List<Widget>.generate(size, (index) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0),
-          child: Icon(
-            Icons.brightness_1,
-            size: 10.0,
-            color: position == index ? Colors.grey : Colors.white,
-          ),
-        );
-      }),
-    );
-  }
-}
