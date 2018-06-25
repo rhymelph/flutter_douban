@@ -59,24 +59,25 @@ class _BookInfoState extends State<BookInfo> {
       body: bookEntity == null ? _loading() : _body(),
       floatingActionButton: bookEntity == null
           ? null
-          : bookEntity.commentList==null?null:FloatingActionButton(
-              child: Icon(Icons.comment),
-              onPressed: _showComment,
-            ),
+          : bookEntity.commentList == null
+              ? null
+              : FloatingActionButton(
+                  child: Icon(Icons.comment),
+                  onPressed: _showComment,
+                ),
     );
   }
 
   _showComment() {
     scaffoldKey.currentState.showBottomSheet((context) {
       return BottomSheet(
-        onClosing: () {
-        },
+        onClosing: () {},
         builder: (context) {
           return ListView.builder(
               itemCount: bookEntity.commentList.length,
               itemBuilder: (context, index) {
                 Comment comment = bookEntity.commentList[index];
-                if(index==0){
+                if (index == 0) {
                   return Padding(
                     padding: const EdgeInsets.fromLTRB(0.0, 32.0, 0.0, 0.0),
                     child: _listTitleComment(comment),
@@ -98,12 +99,15 @@ class _BookInfoState extends State<BookInfo> {
       ),
       subtitle: Column(
         children: <Widget>[
-           WebText(text: comment.title,url: comment.address,),
+          WebText(
+            text: comment.title,
+            url: comment.address,
+          ),
           Text(
             comment.shortContent,
             style: Theme.of(context).textTheme.body1,
           ),
-           Padding(
+          Padding(
             padding: const EdgeInsets.all(8.0),
             child: Divider(
               color: Colors.green,
@@ -136,33 +140,35 @@ class _BookInfoState extends State<BookInfo> {
             alignment: Alignment.centerRight,
             child: Chip(
               backgroundColor: Colors.white,
-              label: Text(comment.ratingDes),
+              label: Text(comment.ratingDes ?? ''),
             ),
           ),
         )
       ],
     ));
-    int startCount = (double.parse(comment.ratingsValue) ~/ 10).toInt();
-    List<Widget> starWidget = new List<Widget>.generate(startCount, (index) {
-      return new Icon(
-        Icons.star,
-        color: Colors.yellow,
-        size: 20.0,
-      );
-    });
-    starWidget.addAll(new List<Widget>.generate(5 - startCount, (index) {
-      return new Icon(
-        Icons.star,
-        size: 20.0,
-      );
-    }));
-    commentWidget.add(new Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: starWidget,
-      ),
-    ));
+    if(comment.ratingsValue!=null){
+      int startCount = (double.parse(comment.ratingsValue) ~/ 10).toInt();
+      List<Widget> starWidget = new List<Widget>.generate(startCount, (index) {
+        return new Icon(
+          Icons.star,
+          color: Colors.yellow,
+          size: 20.0,
+        );
+      });
+      starWidget.addAll(new List<Widget>.generate(5 - startCount, (index) {
+        return new Icon(
+          Icons.star,
+          size: 20.0,
+        );
+      }));
+      commentWidget.add(new Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: starWidget,
+        ),
+      ));
+    }
     commentWidget.add(new Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32.0),
       child: Text(comment.time),
@@ -216,12 +222,10 @@ class _BookInfoState extends State<BookInfo> {
           widget.book.imageAddress,
           fit: BoxFit.fitWidth,
         ),
-        ClipRect(
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-            child: DecoratedBox(
-              decoration: BoxDecoration(color: Colors.grey.withOpacity(0.2)),
-            ),
+        BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+          child: DecoratedBox(
+            decoration: BoxDecoration(color: Colors.grey.withOpacity(0.2)),
           ),
         ),
         Align(

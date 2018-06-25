@@ -3,6 +3,8 @@ import 'package:flutter_douban/http/HttpManagert.dart' as HttpManager;
 import 'package:flutter_douban/value.dart';
 import 'package:flutter_douban/utils/Utils.dart';
 import 'package:flutter_douban/entity/music.dart';
+import 'package:flutter_douban/info/music_info.dart';
+
 class MusicPage extends StatefulWidget {
   MusicPage(this.offset);
 
@@ -93,20 +95,18 @@ class _MusicPageState extends State<MusicPage> {
     );
   }
 
-  _click(String address) async{
+  _click(String address) async {
     if (await canLaunch(address)) {
       await launch(address, forceWebView: true);
     }
   }
+
   //顶部banner
   _getTopWidgets() {
     List<Widget> widgets =
         new List<Widget>.generate(widget.data.bannerList.length, (index) {
       return new GestureDetector(
-        onTap: (){
-          _click(widget.data.bannerList[index].address);
-
-        },
+        onTap: () => _click(widget.data.bannerList[index].address),
         child: new Image.network(
           widget.data.bannerList[index].imageAddress,
           fit: BoxFit.cover,
@@ -154,26 +154,29 @@ class _MusicPageState extends State<MusicPage> {
     List<Widget> m250List =
         new List.generate(widget.data.m250List.itemList.length, (index) {
       Music250Item music250item = widget.data.m250List.itemList[index];
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ClipOval(
-              child: new Image.network(
-                music250item.imageAddress,
-                width: 70.0,
-                height: 70.0,
-                fit: BoxFit.cover,
+      return new GestureDetector(
+        onTap: () => _getInfo(widget.data.m250List.itemList[index].address),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              ClipOval(
+                child: new Image.network(
+                  music250item.imageAddress,
+                  width: 70.0,
+                  height: 70.0,
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-            Container(
-              child: Text(music250item.title),
-              width: 70.0,
-              alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(vertical: 4.0),
-            ),
-          ],
+              Container(
+                child: Text(music250item.title),
+                width: 70.0,
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(vertical: 4.0),
+              ),
+            ],
+          ),
         ),
       );
     });
@@ -186,51 +189,62 @@ class _MusicPageState extends State<MusicPage> {
     );
   }
 
+  void _getInfo(String address) {
+    print(address);
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => MusicInfo(
+              address: address,
+            )));
+  }
+
   //编辑推荐
   _getEditWidget() {
     List<Widget> editList =
         new List.generate(widget.data.editList.itemList.length, (index) {
       MusicEditItem musicedititem = widget.data.editList.itemList[index];
-      return  Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child:  Card(
-          child:  Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-               Image.network(
-                musicedititem.imageAddress,
-              ),
-              Container(
-                child: Text(
-                  musicedititem.name,
-                  style: Theme.of(context).textTheme.title,
+      return new GestureDetector(
+        onTap: () => _getInfo(widget.data.editList.itemList[index].address),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Card(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.network(
+                  musicedititem.imageAddress,
                 ),
-                alignment: Alignment.center,
-              ),
-              Container(
-                child: Text(
-                  musicedititem.des,
-                  style: Theme.of(context).textTheme.body2,
+                Container(
+                  child: Text(
+                    musicedititem.name,
+                    style: Theme.of(context).textTheme.title,
+                  ),
+                  alignment: Alignment.center,
                 ),
-                alignment: Alignment.center,
-              ),
-              Container(
-                width: 150.0,
-                padding: const EdgeInsets.fromLTRB(4.0, 8.0, 4.0, 8.0),
-                child: Text(
-                  musicedititem.summery,
-                  style: Theme.of(context).textTheme.body2,
+                Container(
+                  child: Text(
+                    musicedititem.des,
+                    style: Theme.of(context).textTheme.body2,
+                  ),
+                  alignment: Alignment.center,
                 ),
-                alignment: Alignment.center,
-              ),
-            ],
+                Container(
+                  width: 150.0,
+                  padding: const EdgeInsets.fromLTRB(4.0, 8.0, 4.0, 8.0),
+                  child: Text(
+                    musicedititem.summery,
+                    style: Theme.of(context).textTheme.body2,
+                  ),
+                  alignment: Alignment.center,
+                ),
+              ],
+            ),
           ),
         ),
       );
     });
-    return  SingleChildScrollView(
+    return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child:  Row(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: editList,
       ),
@@ -248,56 +262,59 @@ class _MusicPageState extends State<MusicPage> {
             BuildContext context,
             index,
           ) {
-            return  Card(
-              child: Container(
-                  alignment: Alignment.center,
-                  child: Stack(
-                    children: <Widget>[
-                       Image.network(
-                        e.itemList[index].imageAddress,
-                        fit: BoxFit.cover,
-                        height: 200.0,
-                        width: 200.0,
-                      ),
-                       Container(
-                        padding: const EdgeInsets.all(8.0),
-                        alignment: Alignment.bottomCenter,
-                        child:  Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            Text(
-                              e.itemList[index].name,
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .body2
-                                  .copyWith(color: Colors.white),
-                            ),
-                            Text(
-                              e.itemList[index].type,
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .body1
-                                  .copyWith(color: Colors.white),
-                            ),
-                          ],
+            return new GestureDetector(
+              onTap: () => _getInfo(e.itemList[index].address),
+              child: Card(
+                child: Container(
+                    alignment: Alignment.center,
+                    child: Stack(
+                      children: <Widget>[
+                        Image.network(
+                          e.itemList[index].imageAddress,
+                          fit: BoxFit.cover,
+                          height: 200.0,
+                          width: 200.0,
                         ),
-                        decoration:  BoxDecoration(
-                          gradient:  LinearGradient(
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
-                            colors: [
-                              Colors.black,
-                              Colors.black54,
-                              Colors.black12,
-                              Colors.transparent,
+                        Container(
+                          padding: const EdgeInsets.all(8.0),
+                          alignment: Alignment.bottomCenter,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              Text(
+                                e.itemList[index].name,
+                                style: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .body2
+                                    .copyWith(color: Colors.white),
+                              ),
+                              Text(
+                                e.itemList[index].type,
+                                style: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .body1
+                                    .copyWith(color: Colors.white),
+                              ),
                             ],
                           ),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                              colors: [
+                                Colors.black,
+                                Colors.black54,
+                                Colors.black12,
+                                Colors.transparent,
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
-                  )),
+                      ],
+                    )),
+              ),
             );
           },
           childCount: e.itemList.length,
@@ -378,9 +395,13 @@ class SliverBanner extends SliverPersistentHeaderDelegate {
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Opacity(
       opacity: (maxExtent - shrinkOffset) / maxExtent,
-      child: ViewPager(children: childs,isShowIndicator: shrinkOffset==0,),
+      child: ViewPager(
+        children: childs,
+        isShowIndicator: shrinkOffset == 0,
+      ),
     );
   }
+
   @override
   double get maxExtent => 200.0;
 
@@ -392,5 +413,4 @@ class SliverBanner extends SliverPersistentHeaderDelegate {
     return true;
   }
 }
-
 

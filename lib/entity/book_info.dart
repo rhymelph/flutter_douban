@@ -147,11 +147,13 @@ class BookEntity {
       return tagsDoc[index].text;
     });
 
-    //
-    Element subjectShow=body.getElementsByClassName('subject_show').first;
-    Element divSubject=subjectShow.getElementsByTagName('div').first;
-    String subject=divSubject.text;
-
+    //丛书信息
+    String subject='';
+    var subjectShow=body.getElementsByClassName('subject_show');
+    if(subjectShow.length>0){
+      Element divSubject=subjectShow.first.getElementsByTagName('div').first;
+       subject=divSubject.text;
+    }
     //获取书评
     List<Comment> commentList;
 
@@ -166,11 +168,15 @@ class BookEntity {
         avatorImg=attributes['src'];
 
         String name=mainHd.getElementsByClassName('name').first.text;
-        Element mainTitleRating=mainHd.getElementsByClassName('main-title-rating').first;
-        String ratingsValue=mainTitleRating.attributes['class'];
-        ratingsValue=ratingsValue.substring(ratingsValue.indexOf('allstar')+7,ratingsValue.indexOf('allstar')+9);
-        String ratingsDes=mainTitleRating.attributes['title'];
 
+        var mainTitleRating=mainHd.getElementsByClassName('main-title-rating');
+        String ratingsDes;
+        String ratingsValue;
+        if(mainTitleRating.length>0){
+          ratingsValue=mainTitleRating.first.attributes['class'];
+          ratingsValue=ratingsValue.substring(ratingsValue.indexOf('allstar')+7,ratingsValue.indexOf('allstar')+9);
+          ratingsDes=mainTitleRating.first.attributes['title'];
+        }
         String time=mainHd.getElementsByClassName('main-meta').first.text;
 
         Element mainBd=reviewItem[index].getElementsByClassName('main-bd').first;
