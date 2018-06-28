@@ -5,19 +5,19 @@ import 'package:html/parser.dart';
 class BookEntity {
   final String author; //作者
   final String publish; //出版社
-  final String origin_title; //原名
-  final String author_des; //译者
-  final String publish_year; //出版年
-  final String page_count; //页数
+  final String originTitle; //原名
+  final String authorDes; //译者
+  final String publishYear; //出版年
+  final String pageCount; //页数
   final String price; //价格
-  final String Binding; //装帧
+  final String binding; //装帧
   final String series; //丛书
   final String ISBM; //ISBM
   final String ratingValue; //评分
   final String ratingCount; //评价
-  final String intro_content; //内容简介
-  final String read_address;
-  final String intro_author; //作者简介
+  final String introContent; //内容简介
+  final String readAddress;
+  final String introAuthor; //作者简介
   final String indent; //目录
   final List<String> tags; //标签
   final String subject; //丛书信息
@@ -26,19 +26,19 @@ class BookEntity {
   BookEntity(
       this.author,
       this.publish,
-      this.origin_title,
-      this.author_des,
-      this.publish_year,
-      this.page_count,
+      this.originTitle,
+      this.authorDes,
+      this.publishYear,
+      this.pageCount,
       this.price,
-      this.Binding,
+      this.binding,
       this.series,
       this.ISBM,
       this.ratingValue,
       this.ratingCount,
-      this.intro_content,
-      this.read_address,
-      this.intro_author,
+      this.introContent,
+      this.readAddress,
+      this.introAuthor,
       this.indent,
       this.tags,
       this.subject,

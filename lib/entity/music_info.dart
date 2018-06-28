@@ -96,13 +96,17 @@ class MusicInfo1{
     var g = f.first.getElementsByClassName('all');
     String h='';//介绍
     if(g.length>0){
-      h=g.first.text;
+      h=g.first.text.replaceAll('\n', '').replaceFirst('　　', '');
+      h=h.replaceAll('　　', '　　\n    ');
+      h='   $h';
     }
     var i=body.getElementsByClassName('track-list');
     String j='';//曲目
     if(i.length>0){
-      j=i.first.text;
-
+      j=i.first.text.replaceAll('\n', '').replaceAll(' ', '');
+      j=j.replaceAll(RegExp("[0-9]\d*"), "\n");
+      j=j.replaceAll('.', '');
+      j=j.replaceFirst('\n', '');
     }
 
     return new MusicInfo1(c,b,otherName,author,schools,Album,medium,releaseTime,publisher,recordsNumber,barCode,isrc,h,j);

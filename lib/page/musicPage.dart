@@ -4,7 +4,7 @@ import 'package:flutter_douban/value.dart';
 import 'package:flutter_douban/utils/Utils.dart';
 import 'package:flutter_douban/entity/music.dart';
 import 'package:flutter_douban/info/music_info.dart';
-
+import 'package:flutter_douban/info/music_play.dart';
 class MusicPage extends StatefulWidget {
   MusicPage(this.offset);
 
@@ -192,7 +192,7 @@ class _MusicPageState extends State<MusicPage> {
   void _getInfo(String address) {
     print(address);
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => MusicInfo(
+        builder: (context) => address.contains('play')?MusicPlay():MusicInfo(
               address: address,
             )));
   }

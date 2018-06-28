@@ -15,12 +15,8 @@ class MusicInfo extends StatefulWidget {
 }
 
 class _MusicInfoState extends State<MusicInfo> {
-
   bool isSuccess = true;
   MusicInfo1 result;
-
-  IconData iconData=Icons.info;
-
 
   _loadData() async {
     HttpManager.get(
@@ -52,86 +48,154 @@ class _MusicInfoState extends State<MusicInfo> {
     }
   }
 
+  final double _appBarHeight = 256.0;
 
   _getBody() {
     return Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          // ignore: conflicting_dart_import
-          Image.network(
-            result.image,
-            height: MediaQuery.of(context).size.height,
-            fit: BoxFit.fill,
+      fit: StackFit.expand,
+      children: <Widget>[
+        // ignore: conflicting_dart_import
+        Image.network(
+          result.image,
+          height: MediaQuery.of(context).size.height,
+          fit: BoxFit.fill,
+        ),
+        BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
+          child: DecoratedBox(
+            decoration: BoxDecoration(color: Colors.transparent),
           ),
-          BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
-            child: DecoratedBox(
-              decoration: BoxDecoration(color: Colors.transparent),
+        ),
+        Center(
+          child: Container(
+            margin: const EdgeInsets.all(4.0),
+            alignment: Alignment.centerLeft,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(const Radius.circular(8.0)),
+              color: Colors.grey.shade600.withOpacity(0.5),
             ),
-          ),
-          Center(
-            child: Container(
-              margin: const EdgeInsets.all(4.0),
-              alignment: Alignment.centerLeft,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(const Radius.circular(8.0)),
-                color: Colors.grey.shade600.withOpacity(0.5),
-              ),
-              child: CustomScrollView(
-                slivers: <Widget>[
-                  SliverAppBar(
-                    pinned: true,
-                    expandedHeight: 250.0,
-                    backgroundColor: Colors.transparent,
+            child: CustomScrollView(
+              slivers: <Widget>[
+                SliverAppBar(
+                  pinned: true,
+                  expandedHeight: _appBarHeight,
+                  backgroundColor: Colors.transparent,
+                  flexibleSpace: FlexibleSpaceBar(
                     title: Text(result.name),
-                    flexibleSpace: Image.network(result.image,fit: BoxFit.cover,),
-                    actions: <Widget>[
-                      new IconButton(
-                          icon: Icon(iconData),
-                          onPressed: (){_showInfoBottomSheet();})
-                    ],
+                    background: Stack(
+                      fit: StackFit.expand,
+                      children: <Widget>[
+                        Image.network(
+                          result.image,
+                          fit: BoxFit.cover,
+                          height: _appBarHeight,
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
+                  actions: <Widget>[
+                    IconButton(
+                        icon: Icon(Icons.info),
+                        onPressed: () {
+                          _showInfoBottomSheet();
+                        })
+                  ],
+                ),
+                SliverPadding(
+                    padding: const EdgeInsets.all(4.0),
+                    sliver: SliverList(
+                        delegate: SliverChildListDelegate(_getCommentList()))),
+//                SliverList(
+//                  delegate: SliverChildBuilderDelegate(
+//                    (context, index) {},
+//                  ),
+//                ),
+              ],
             ),
-          )
-        ],
-      );
+          ),
+        )
+      ],
+    );
   }
 
-  List<Widget> _getTextList(){
-    List<Widget> widgetList=[];
-    if(result.otherName!=null&&result.otherName.isNotEmpty){
+  List<Widget> _getCommentList() {
+    List<Widget> list = [
+      ListTile(
+        title: Text('介绍',
+            style: Theme.of(context).textTheme.title.copyWith(
+                  color: Colors.white,
+                )),
+      ),
+      Text(
+        result.indent.isEmpty ? '    暂无介绍' : result.indent,
+        style: Theme.of(context).textTheme.body1.copyWith(
+              color: Colors.white,
+            ),
+      ),
+      ListTile(
+        title: Text('曲目',
+            style: Theme.of(context).textTheme.title.copyWith(
+                  color: Colors.white,
+                )),
+      ),
+      Text(
+        result.introContent.isEmpty ? '   暂无曲目' : result.introContent,
+        style: Theme.of(context).textTheme.body1.copyWith(
+              color: Colors.white,
+            ),
+      ),
+    ];
+    return list;
+  }
+
+  List<Widget> _getTextList() {
+    List<Widget> widgetList = [];
+    if (result.otherName != null && result.otherName.isNotEmpty) {
       widgetList.add(_getText(result.otherName));
     }
-    if(result.author!=null&&result.author.isNotEmpty){
+    if (result.author != null && result.author.isNotEmpty) {
       widgetList.add(_getText(result.author));
     }
-    if(result.schools!=null&&result.schools.isNotEmpty){
+    if (result.schools != null && result.schools.isNotEmpty) {
       widgetList.add(_getText(result.schools));
     }
-    if(result.Album!=null&&result.Album.isNotEmpty){
+    if (result.Album != null && result.Album.isNotEmpty) {
       widgetList.add(_getText(result.Album));
     }
-    if(result.medium!=null&&result.medium.isNotEmpty){
+    if (result.medium != null && result.medium.isNotEmpty) {
       widgetList.add(_getText(result.medium));
     }
-    if(result.releaseTime!=null&&result.releaseTime.isNotEmpty){
+    if (result.releaseTime != null && result.releaseTime.isNotEmpty) {
       widgetList.add(_getText(result.releaseTime));
     }
-    if(result.publisher!=null&&result.publisher.isNotEmpty){
+    if (result.publisher != null && result.publisher.isNotEmpty) {
       widgetList.add(_getText(result.publisher));
-    } if(result.recordsNumber!=null&&result.recordsNumber.isNotEmpty){
+    }
+    if (result.recordsNumber != null && result.recordsNumber.isNotEmpty) {
       widgetList.add(_getText(result.recordsNumber));
-    } if(result.barCode!=null&&result.barCode.isNotEmpty){
+    }
+    if (result.barCode != null && result.barCode.isNotEmpty) {
       widgetList.add(_getText(result.barCode));
-    }if(result.isrc!=null&&result.isrc.isNotEmpty){
-      widgetList.add(_getText(result.isrc));
+    }
+    if (result.isrc != null && result.isrc.isNotEmpty) {
+      if (result.isrc.contains('\n')) {
+        List<String> isrcs = result.isrc.split('\n');
+        widgetList.addAll(isrcs.map((s) => _getText(s)));
+      } else {
+        widgetList.add(_getText(result.isrc));
+      }
     }
     return widgetList;
   }
-  _getText(String text){
-    return ListTile(title: Text(text,style: Theme.of(context).textTheme.body1.copyWith(color: Colors.white),));
+
+  _getText(String text) {
+    return ListTile(
+      title: Text(
+        text,
+        style: Theme.of(context).textTheme.body1,
+      ),
+      leading: Icon(Icons.info_outline),
+    );
   }
 
   @override
@@ -148,32 +212,17 @@ class _MusicInfoState extends State<MusicInfo> {
     );
   }
 
-  _onClose(){
-    setState(() {
-      iconData=Icons.info;
-
-    });
-  }
-
   _showInfoBottomSheet() {
-    setState(() {
-    iconData=Icons.info_outline;
-    });
-    showModalBottomSheet<Null>(context: context, builder: (BuildContext context) => _DemoDrawer(_getTextList(),));
-
-  }
-}
-class _DemoDrawer extends StatelessWidget {
-  final List<Widget> list;
-
-   _DemoDrawer(this.list);
-
-  @override
-  Widget build(BuildContext context) {
-    return new Drawer(
-      child: ListView(
-        children: list,
-      ),
-    );
+    List<Widget> items = _getTextList();
+    showModalBottomSheet<Null>(
+        context: context,
+        builder: (BuildContext context) => Drawer(
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  return items[index];
+                },
+                itemCount: items.length,
+              ),
+            ));
   }
 }

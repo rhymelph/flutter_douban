@@ -191,12 +191,12 @@ class _BookInfoState extends State<BookInfo> {
               TitleItem('内容简介'),
               Container(
                   padding: const EdgeInsets.all(8.0),
-                  child: Center(child: Text(bookEntity.intro_content))),
+                  child: Center(child: Text(bookEntity.introContent))),
               _readButton(),
               TitleItem('作者简介'),
               Container(
                   padding: const EdgeInsets.all(8.0),
-                  child: Center(child: Text(bookEntity.intro_author))),
+                  child: Center(child: Text(bookEntity.introAuthor))),
               TitleItem('目录'),
               Container(
                   padding: const EdgeInsets.all(8.0),
@@ -254,11 +254,11 @@ class _BookInfoState extends State<BookInfo> {
 
   //试读button
   _readButton() {
-    if (bookEntity.read_address != null) {
+    if (bookEntity.readAddress != null) {
       return Container(
         child: WebButton(
           text: '立即试读',
-          url: bookEntity.read_address,
+          url: bookEntity.readAddress,
           errorTip: '试读失败',
         ),
       );
@@ -280,9 +280,9 @@ class _BookInfoState extends State<BookInfo> {
             Theme.of(context).textTheme.headline.copyWith(color: Colors.white),
       ));
     }
-    if (bookEntity.origin_title != null) {
+    if (bookEntity.originTitle != null) {
       widgets.add(Text(
-        bookEntity.origin_title ?? '',
+        bookEntity.originTitle ?? '',
         overflow: TextOverflow.ellipsis,
         style: Theme
             .of(context)
@@ -300,20 +300,20 @@ class _BookInfoState extends State<BookInfo> {
     if (bookEntity.author != null) {
       widgets.add(_formatTextWhile(bookEntity.author ?? ''));
     }
-    if (bookEntity.author_des != null) {
-      widgets.add(_formatTextWhile(bookEntity.author_des ?? ''));
+    if (bookEntity.authorDes != null) {
+      widgets.add(_formatTextWhile(bookEntity.authorDes ?? ''));
     }
-    if (bookEntity.publish_year != null) {
-      widgets.add(_formatTextWhile(bookEntity.publish_year ?? ''));
+    if (bookEntity.publishYear != null) {
+      widgets.add(_formatTextWhile(bookEntity.publishYear ?? ''));
     }
-    if (bookEntity.page_count != null) {
-      widgets.add(_formatTextWhile(bookEntity.page_count ?? ''));
+    if (bookEntity.pageCount != null) {
+      widgets.add(_formatTextWhile(bookEntity.pageCount ?? ''));
     }
     if (bookEntity.price != null) {
       widgets.add(_formatTextWhile(bookEntity.price ?? ''));
     }
-    if (bookEntity.Binding != null) {
-      widgets.add(_formatTextWhile(bookEntity.Binding ?? ''));
+    if (bookEntity.binding != null) {
+      widgets.add(_formatTextWhile(bookEntity.binding ?? ''));
     }
     if (bookEntity.series != null) {
       widgets.add(_formatTextWhile(bookEntity.series ?? ''));
