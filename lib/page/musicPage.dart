@@ -190,7 +190,7 @@ class _MusicPageState extends State<MusicPage> {
 
   _loadPlay(String address) async{
     if(await canLaunch(address)){
-       launch(address,forceWebView: true);
+       launch(address,forceWebView: false);
     }
   }
   void _getInfo(String address) {

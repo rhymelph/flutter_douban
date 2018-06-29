@@ -4,15 +4,23 @@
 
 ## 获取demo1.3版本(目前只支持安卓的demo)
 
-[点击我下载](https://github.com/rhylme/flutter_douban/blob/master/apk/app1.3.apk?raw=true)
+[点击我下载](https://github.com/rhylme/flutter_douban/blob/master/apk/app1.4.apk?raw=true)
 
 ## 持续更新
 
 > 欢迎star
 
-## 公告:
+## 1.4版本
 
-> 这段时间由于个人原因拖更抱歉。。
+> 1. 添加音乐页面
+
+> 2. 添加音乐详情
+
+> 3. 记录音乐列表的滚动位置
+
+> 4. 添加字体
+
+<img src="/gif/index1.4.gif" width="240px" height="426px"/>
 
 ## 1.3版本
 
