@@ -2,7 +2,7 @@
 
 class Value{
   static const String appName='豆瓣Flutter版';
-  static const String appVersion='1.3';
+  static const String appVersion='1.4';
   static const String author='Rhyme';
   static const String QQ='708959817';
   static const String QQNoSupport='不支持该功能或未下载QQ';
