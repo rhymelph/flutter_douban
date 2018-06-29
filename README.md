@@ -2,7 +2,7 @@
 
 一款基于豆瓣api2.0的小demo(更多详情请登陆[官网](https://www.douban.com) )
 
-## 获取demo1.3版本(目前只支持安卓的demo)
+## 获取demo1.4版本(目前只支持安卓的demo)
 
 [点击我下载](https://github.com/rhylme/flutter_douban/blob/master/apk/app1.4.apk?raw=true)
 
